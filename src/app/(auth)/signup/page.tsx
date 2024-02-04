@@ -1,19 +1,13 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { options } from "../../api/auth/[...nextauth]/options";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { signup } from "@/lib/services/authServices";
-import { permanentRedirect } from "next/navigation";
+import { signup } from "@/lib/actions/authActions";
 function SignUpPage() {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
 
-  if(session) {
-    permanentRedirect('/daily-questions')
-  }
 
-  console.log(session);
   const router = useRouter();
 
   async function onSubmit(formData: FormData) {
@@ -32,11 +26,8 @@ function SignUpPage() {
         // callbackUrl,
         redirect: false,
       };
-      console.log({ credentials });
       const signUpRes = await signup(email as string, password as string);
       if (signUpRes.error) {
-        console.log("here");
-        console.log(signUpRes.error);
         if (signUpRes.error.includes("auth/email-already-in-use")) {
           toast.error("Email already in use");
         } else {

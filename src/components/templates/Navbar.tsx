@@ -8,7 +8,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import { MdOutlineCancel } from "react-icons/md";
 import { onAuthStateChanged, auth } from "../../app/firebase/config";
-import { signoutFirebase } from "@/lib/services/authServices";
+import { signoutFirebase } from "@/lib/actions/authActions";
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -54,7 +54,7 @@ export function Navbar() {
         ) : (
           <>
             {" "}
-            <Button isLink={true} href="/api/auth/signin">
+            <Button isLink={true} href="/signin">
               Sign in
             </Button>
             <Button isLink={true} href="/signup">
