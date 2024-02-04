@@ -2,7 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { signin } from "@/lib/services/authServices";
+import { signin } from "@/lib/actions/authActions";
 
 
 // Some random ideas. I think I kind of get this next-auth, firebase stuff:

@@ -1,32 +1,23 @@
-'use client'
+"use client";
 import { useSession } from "next-auth/react";
-import { options } from "../../api/auth/[...nextauth]/options";
 import { signIn, SignInOptions } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { permanentRedirect } from "next/navigation";
+
+function SignInPage() {
+  const searchParams = useSearchParams();
+  const { data: session } = useSession();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
 
-
- function SignInPage( ) {
-
-  const {data: session} = useSession()
-
-  if(session) {
-    permanentRedirect('/daily-questions')
-  }
-
-
-  const router = useRouter()
-  
-
+  const router = useRouter();
 
   async function onSubmit(formData: FormData) {
     try {
       const email = formData.get("email");
       const password = formData.get("password");
-      console.log({email})
-      console.log({password})
+      console.log({ email });
+      console.log({ password });
       if (!email || !password) {
         return;
       }
@@ -34,19 +25,18 @@ import { permanentRedirect } from "next/navigation";
       const credentials: SignInOptions = {
         email,
         password,
-        // callbackUrl,
+        callbackUrl,
         redirect: false,
       };
-      console.log({credentials})
 
       const res = await signIn("credentials", credentials);
       if (res?.ok && res.url) {
         toast.success("Login successful, Redirecting...");
         return router.replace('/daily-questions');
       } else if (res?.error) {
-        if(res?.error?.includes('CredentialsSignin')) {
-          toast.error('Email or password incorrect');
-        }else {
+        if (res?.error?.includes("CredentialsSignin")) {
+          toast.error("Email or password incorrect");
+        } else {
           toast.error(`Failed to login`);
         }
       }
