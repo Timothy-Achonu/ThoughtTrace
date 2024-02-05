@@ -1,11 +1,9 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { signup } from "@/lib/actions/authActions";
 function SignUpPage() {
-  const { data: session } = useSession()
 
 
   const router = useRouter();
