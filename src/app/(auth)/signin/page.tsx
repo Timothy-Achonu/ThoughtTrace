@@ -16,8 +16,7 @@ function SignInPage() {
     try {
       const email = formData.get("email");
       const password = formData.get("password");
-      console.log({ email });
-      console.log({ password });
+      
       if (!email || !password) {
         return;
       }
