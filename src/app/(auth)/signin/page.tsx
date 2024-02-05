@@ -1,12 +1,10 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 function SignInPage() {
   const searchParams = useSearchParams();
-  const { data: session } = useSession();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
 
