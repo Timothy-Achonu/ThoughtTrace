@@ -13,7 +13,8 @@ export default async function AuthLayout({
   }
   return (
     <main className="w-full min-h-screen">
-      <div className="bg-white text-black p-[5%] flex flex-col justify-center place-items-center flex-1 min-w-[MIN(100%,500px)]">
+      <div className="bg-white text-black p-[5%] min-h-screen flex 
+      flex-col justify-center place-items-center flex-1 min-w-[MIN(100%,500px)]">
         {children}
       </div>
     </main>
