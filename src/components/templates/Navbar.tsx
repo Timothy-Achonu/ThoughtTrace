@@ -43,8 +43,8 @@ export function Navbar() {
         <Button intent={"ghost"} isLink={true} href="/">
           Home
         </Button>
-        <Button intent={"ghost"} isLink={true} href="/href">
-          Daily Questions
+        <Button intent={"ghost"} isLink={true} href="/about">
+          About us
         </Button>
 
         {session?.user ? (

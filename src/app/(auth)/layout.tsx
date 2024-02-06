@@ -12,9 +12,17 @@ export default async function AuthLayout({
     permanentRedirect("/daily-questions");
   }
   return (
-    <main className="w-full min-h-screen">
-      <div className="bg-white text-black p-[5%] min-h-screen flex 
-      flex-col justify-center place-items-center flex-1 min-w-[MIN(100%,500px)]">
+    <main className="w-full min-h-screen flex ">
+      <div
+        className="w-full md:flex flex-col 
+      justify-center place-items-center hidden "
+      >
+        It&apos;s good to keep Journals
+      </div>
+      <div
+        className="bg-white text-black min-h-screen flex 
+      flex-col justify-center place-items-center w-full overflow-y-scroll"
+      >
         {children}
       </div>
     </main>
