@@ -42,6 +42,7 @@ function SignInForm() {
 
       const res = await signIn("credentials", credentials);
       if (res?.ok && res.url) {
+        console.log(res)
         toast.success("Login successful, Redirecting...");
         return router.replace("/daily-questions");
       } else if (res?.error) {
@@ -59,10 +60,7 @@ function SignInForm() {
   return (
     <section className=" w-[90%] mx-auto">
       <div className="">
-        {/* This is now in the layout of the auth pages */}
-        {/* On the left-hand side on  desktop screens, 
-        there would be profound quotes about journal-keeping changing,
-         with a smoth easing animation—they would be growing dim and growing bright*/}
+        
         <Heading className="text-2xl text-center font-semibold">
           Sign In
         </Heading>

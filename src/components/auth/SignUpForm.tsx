@@ -12,7 +12,7 @@ import { Button } from "..";
 function SignUpForm() {
   const { handleBlur, handleSubmit, handleChange, values, touched, errors } =
     useFormik({
-      initialValues: { email: "", password: "" },
+      initialValues: { email: "", password: "" , confirmPassword: ''},
       validationSchema: signUpValidationSchema,
       onSubmit: () => {},
     });
@@ -67,9 +67,6 @@ function SignUpForm() {
   return (
     <section className=" w-[90%] mx-auto">
       <div>
-        {/* On the left-hand side on  desktop screens, 
-        there would be profound quotes about journal-keeping changing,
-         with a smoth easing animation—they would be growing dim and growing bright*/}
         <Heading className="text-2xl text-center font-semibold">
           Sign Up
         </Heading>{" "}
@@ -96,6 +93,17 @@ function SignUpForm() {
               onBlur={handleBlur}
               error={touched.password && errors.password ? errors.password : ""}
               value={values.password}
+              placeholder="**********"
+            />
+            <Input
+              name="confirmpassword"
+              id="confirmpassword"
+              type="password"
+              label="confirm password"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : ""}
+              value={values.confirmPassword}
               placeholder="**********"
             />
           </div>
