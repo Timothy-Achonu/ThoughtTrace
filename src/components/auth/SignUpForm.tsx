@@ -67,9 +67,6 @@ function SignUpForm() {
   return (
     <section className=" w-[90%] mx-auto">
       <div>
-        {/* On the left-hand side on  desktop screens, 
-        there would be profound quotes about journal-keeping changing,
-         with a smoth easing animation—they would be growing dim and growing bright*/}
         <Heading className="text-2xl text-center font-semibold">
           Sign Up
         </Heading>{" "}
