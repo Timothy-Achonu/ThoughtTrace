@@ -32,9 +32,7 @@ const button = cva(
           "text-accent-blue",
           "border",
           "border-accent-blue",
-          "hover:bg-accent-blue",
           "hover:text-neutral-main",
-          "hover:border-none",
           "disabled:opacity-25",
         ],
         ghost: [
