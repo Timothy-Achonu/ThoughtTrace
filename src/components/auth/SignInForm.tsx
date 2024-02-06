@@ -42,6 +42,7 @@ function SignInForm() {
 
       const res = await signIn("credentials", credentials);
       if (res?.ok && res.url) {
+        console.log(res)
         toast.success("Login successful, Redirecting...");
         return router.replace("/daily-questions");
       } else if (res?.error) {

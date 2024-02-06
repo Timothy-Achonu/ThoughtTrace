@@ -1,7 +1,7 @@
 import DashboardLayout from "@/components/templates/DashboardLayout";
 
 function page() {
-  return <DashboardLayout>Daily questions</DashboardLayout>;
+  return <DashboardLayout>Notes</DashboardLayout>;
 }
 
 export default page;

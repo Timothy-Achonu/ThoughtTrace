@@ -12,7 +12,7 @@ import { Button } from "..";
 function SignUpForm() {
   const { handleBlur, handleSubmit, handleChange, values, touched, errors } =
     useFormik({
-      initialValues: { email: "", password: "" },
+      initialValues: { email: "", password: "" , confirmPassword: ''},
       validationSchema: signUpValidationSchema,
       onSubmit: () => {},
     });
@@ -93,6 +93,17 @@ function SignUpForm() {
               onBlur={handleBlur}
               error={touched.password && errors.password ? errors.password : ""}
               value={values.password}
+              placeholder="**********"
+            />
+            <Input
+              name="confirmpassword"
+              id="confirmpassword"
+              type="password"
+              label="confirm password"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : ""}
+              value={values.confirmPassword}
               placeholder="**********"
             />
           </div>
