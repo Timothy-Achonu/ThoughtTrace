@@ -23,14 +23,20 @@ function SignUpForm() {
     try {
       const email = formData.get("email");
       const password = formData.get("password");
+      const confirmPassword = formData.get("confirmPassword");
       handleSubmit();
 
-      if (!email || !password) {
+      if (!email || !password || !confirmPassword) {
         toast.error("Please fill all fields!!!");
         return;
       }
       if (password.toString()?.length < 8) {
         toast.error("Password must be at least 8 characters long");
+        return;
+      }
+      if (password.toString() !== confirmPassword.toString()) {
+        toast.error("Passwords do not match");
+        return;
       }
 
       const credentials: SignInOptions = {
@@ -55,7 +61,8 @@ function SignUpForm() {
         return router.replace("/daily-questions");
       } else if (res?.error) {
         if (res?.error?.includes("CredentialsSignin")) {
-          toast.error("Email or password incorrect");
+          // toast.error("Email or password incorrect");
+          toast.error(`Failed to login`);
         } else {
           toast.error(`Failed to login`);
         }
@@ -96,8 +103,8 @@ function SignUpForm() {
               placeholder="**********"
             />
             <Input
-              name="confirmpassword"
-              id="confirmpassword"
+              name="confirmPassword"
+              id="confirmPassword"
               type="password"
               label="confirm password"
               onChange={handleChange}

@@ -87,7 +87,7 @@ export const Input = ({
               />
             )}
 
-            {props.name === "password" && props.value && (
+            {props.name?.toLowerCase()?.includes('password') && props.value && (
               <span
                 className={`text-[#C0C0C0] absolute right-3 top-[50%] -translate-y-[50%] text-2xl px-2`}
                 onClick={togglePassword}

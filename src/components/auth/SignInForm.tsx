@@ -42,12 +42,15 @@ function SignInForm() {
 
       const res = await signIn("credentials", credentials);
       if (res?.ok && res.url) {
-        console.log(res)
+        // console.log(res) 
         toast.success("Login successful, Redirecting...");
         return router.replace("/daily-questions");
       } else if (res?.error) {
+        console.log(res) 
+        console.log(res?.error)
         if (res?.error?.includes("CredentialsSignin")) {
-          toast.error("Email or password incorrect");
+          // toast.error("Email or password incorrect");
+          toast.error(`Failed to login`);
         } else {
           toast.error(`Failed to login`);
         }
