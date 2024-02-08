@@ -20,6 +20,10 @@ const Navlinks = [
     href: "/daily-questions",
     label: "Daily Questions",
   },
+  {
+    href: "/create",
+    label: "Create",
+  },
 ];
 function Sidebar() {
   const pathname = usePathname();
@@ -28,7 +32,7 @@ function Sidebar() {
     signOut();
   };
   return (
-    <aside className="w-[300px] flex flex-col py-12 px-8 min-h-screen bg-primary-main">
+    <aside className="w-[300px] hidden md:flex flex-col py-12 px-8  bg-primary-main">
       <Image src={Logo} alt="Logo" height={60} width={60} />
       <section className="flex flex-col justify-between mt-14 flex-1">
         <div className="flex flex-col gap-6">
