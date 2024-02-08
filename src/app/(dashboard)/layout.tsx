@@ -2,11 +2,12 @@ import { getServerSession } from "next-auth";
 import { permanentRedirect } from "next/navigation";
 import { options } from "../api/auth/[...nextauth]/options";
 import Sidebar from "@/components/templates/Sidebar";
+import MobileNav from "@/components/templates/MobileNav";
 
-async function layout({children} : {children: React.ReactNode}) {
-    const session = await getServerSession(options);
-    console.log({session}) 
-    /*
+async function layout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(options);
+  console.log({ session });
+  /*
     The user object I'm returning from logging in or signing has and id property, but when I console.log session, the user property doesn't
     have an id property.
     */
@@ -18,11 +19,14 @@ async function layout({children} : {children: React.ReactNode}) {
     permanentRedirect(`/signin`);
   }
   return (
-    <section className="flex">
-        <Sidebar/> 
-      {children}
+    <section className="flex flex-col min-h-screen">
+      <MobileNav />
+      <div className="flex min-h-screen">
+        <Sidebar />
+        {children}
+      </div>
     </section>
-  )
+  );
 }
 
-export default layout
+export default layout;
