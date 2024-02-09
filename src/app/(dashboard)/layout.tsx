@@ -20,6 +20,7 @@ async function layout({ children }: { children: React.ReactNode }) {
   }
   return (
     <section className="flex flex-col min-h-screen">
+      {/* This mobileNav should be hidden when the sidebar shows on mobile */}
       <MobileNav />
       <div className="flex min-h-screen">
         <Sidebar />

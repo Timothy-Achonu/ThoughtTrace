@@ -1,13 +1,18 @@
+'use client';
 import { Button } from "@/components/atoms/Button";
 import { RxHamburgerMenu } from "react-icons/rx";
+import useToggleSidebar from "@/store/toggleSidebar";
 function MobileNav() {
+  const {setShowsidebar} = useToggleSidebar()
   return (
     <nav className=" md:hidden block top-0 w-full py-1 px-3">
+            {/* This mobileNav should be hidden when the sidebar shows on mobile */}
+
         <Button
           intent={"ghost"}
           btnType={"icon"}
           className="rounded-[0px] text-[1.3rem] hover:border-none block ml-auto"
-          // onClick={() => setShowMobileMenu((prev) => !prev)}
+          onClick={() => setShowsidebar()}
         >
           <RxHamburgerMenu />
         </Button>

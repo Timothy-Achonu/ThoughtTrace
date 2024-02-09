@@ -8,7 +8,8 @@ import { Button } from "..";
 import { signoutFirebase } from "@/lib/actions/authActions";
 import { signOut, useSession } from "next-auth/react";
 import { CiLogout } from "react-icons/ci";
-
+import { twMerge } from "tailwind-merge";
+import useToggleSidebar from "@/store/toggleSidebar";
 
 const Navlinks = [
   {
@@ -27,12 +28,17 @@ const Navlinks = [
 ];
 function Sidebar() {
   const pathname = usePathname();
+  const { showSidebar } = useToggleSidebar();
   const handleLogOut = async () => {
     const result = await signoutFirebase();
     signOut();
   };
   return (
-    <aside className="w-[300px] hidden md:flex flex-col py-12 px-8  bg-primary-main">
+    <aside
+      className={`w-[300px] ${
+        showSidebar ? "" : "hidden"
+      } md:flex flex-col py-12 px-8  bg-primary-main`}
+    >
       <Image src={Logo} alt="Logo" height={60} width={60} />
       <section className="flex flex-col justify-between mt-14 flex-1">
         <div className="flex flex-col gap-6">
@@ -59,9 +65,8 @@ function Sidebar() {
           className="text-neutral-main gap-2 w-full border-none hover:bg-accent-blue justify-start"
           onClick={handleLogOut}
         >
-            <CiLogout  className={`text-inherit font-bold text-lg`}/>
-            <span>Log Out</span>
-          
+          <CiLogout className={`text-inherit font-bold text-lg`} />
+          <span>Log Out</span>
         </Button>
       </section>
     </aside>

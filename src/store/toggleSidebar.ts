@@ -1,21 +1,21 @@
-// import { create } from "zustand";
+import { create } from "zustand";
 
-// interface State {
-//   // Your state properties go here
-//   showSidebar: boolean;
-// setShowsider: () => void;
-// }
+interface State {
+  // Your state properties go here
+  showSidebar: boolean;
+setShowsidebar: () => void;
+}
 
-// const useToggleSidebar = create<State>((set) => ({
-//   // Your state initial values go here
-//   showSidebar: null,
-//   setShowsider() {
-//     set((state) => ({
-//       ...state,
-//       showSidebar: !this.showSidebar,
-//     }));
-//   },
+const useToggleSidebar = create<State>((set) => ({
+  // Your state initial values go here
+  showSidebar: false,
+  setShowsidebar() {
+    set((state) => ({
+      ...state,
+      showSidebar: !state.showSidebar,
+    }));
+  },
 
-// }));
+}));
 
-// export default useToggleSidebar;
+export default useToggleSidebar;
