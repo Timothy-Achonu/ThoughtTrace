@@ -11,7 +11,7 @@ type DashboardLayoutPropsType = {
 function DashboardLayout({children, header, subHeader, footer}:DashboardLayoutPropsType) {
  
   return (
-    <section className={`bg-primary-footer flex-1 px-5 flex flex-col`}>
+    <section className={`bg-primary-footer flex-1 md:px-5 px-3 flex flex-col`}>
       {header && (
         <div
           className={twMerge(
@@ -41,7 +41,7 @@ function DashboardLayout({children, header, subHeader, footer}:DashboardLayoutPr
       {footer && (
         <div
           className={twMerge(
-            `sticky grid items-center rounded-xl shadow-sm px-4 md:px-8  py-4 bottom-0 
+            `sticky grid items-center rounded-xl shadow-sm px-0 md:px-8  py-4 bottom-0 
                 left-0 right-0 z-10 w-full psx-[MIN(32px,2%)]`,
           )}
         >
