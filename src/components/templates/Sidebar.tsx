@@ -36,8 +36,8 @@ function Sidebar() {
   return (
     <aside
       className={`w-[300px] ${
-        showSidebar ? "" : "hidden"
-      } md:flex flex-col py-12 px-8  bg-primary-main`}
+        showSidebar ? "left-0" : "left-[-100vh]"
+      } flex transition-all duration-[500ms] md:static fixed top-0 bottom-0 z-[999] flex-col py-12 px-8 bg-primary-main`}
     >
       <Image src={Logo} alt="Logo" height={60} width={60} />
       <section className="flex flex-col justify-between mt-14 flex-1">
