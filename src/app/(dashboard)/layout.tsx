@@ -6,7 +6,8 @@ import MobileNav from "@/components/templates/MobileNav";
 
 async function layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(options);
-  // console.log({ session });
+  console.log({ session });
+  
   /*
     The user object I'm returning from logging in or signing has and id property, but when I console.log session, the user property doesn't
     have an id property.
