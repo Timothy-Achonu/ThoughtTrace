@@ -60,31 +60,31 @@ export const options: NextAuthOptions = {
         const {res, error} = await signin( credentials.email, credentials.password,);
         console.log(res)
         console.log(error)
-          // const res = { id: "42", name: "Ifechi", password: "nextauth" };
-
         if (res) {
           return res;
         }else {
           return null
         }
-        // throw new Error(JSON.stringify(error));
       },
 
-      // async authorize(credentials) {
-        //This is where you need to retrieve user data-
-        //to verify with credentials
-        //Docs: https://next-auth.js.org/configuration/providers/credentials
-      //   console.log({ credentials });
-      //   const user = { id: "42", name: "Ifechi", password: "nextauth" };
-      //   if (
-      //     credentials?.email === user.name &&
-      //     credentials?.password === user.password
-      //   ) {
-      //     return user;
-      //   } else {
-      //     return null;
-      //   }
-      // },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      // new change
+      // console.log(token)
+      if (user) token.id = user.id;
+      return { ...token, ...user };
+    },
+
+    async session({ session, token, user }) {
+      // const { user: userData } = token as { user: any };
+      // session.accessToken = token.accessToken as string;
+      // console.log(token)
+      session.user  = {email: token.email, id: token.sub};
+
+      // console.log("SESSION::: ", session);
+      return session;
+    },
+  },
 };
