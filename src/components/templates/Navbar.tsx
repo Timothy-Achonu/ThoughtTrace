@@ -48,8 +48,8 @@ export function Navbar() {
         </Button>
 
         {session?.user ? (
-          <Button className="" onClick={handleLogOut}>
-            Sign Out
+          <Button className="" isLink={true} href="/notes">
+            Dashboard
           </Button>
         ) : (
           <>
