@@ -58,7 +58,7 @@ function SignUpForm() {
       const res = await signIn("credentials", credentials);
       if (res?.ok && res.url) {
         toast.success("Login successful, Redirecting...");
-        return router.replace("/daily-questions");
+        return router.replace("/notes");
       } else if (res?.error) {
         if (res?.error?.includes("CredentialsSignin")) {
           // toast.error("Email or password incorrect");

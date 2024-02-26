@@ -4,7 +4,8 @@ import NoteCreator from "@/components/molecules/NoteCreator";
 import { handleGetNotes } from "@/lib/services/noteServices";
 import { NoteType } from "@/lib/types/notes";
 import { useState, useEffect } from "react";
-import { notesColRef, onSnapshot } from "@/app/firebase/config";
+import { notesColRef, onSnapshot, query, where } from "@/app/firebase/config";
+import { useSession } from "next-auth/react";
 
 // onSnapshot(colRef, (snapshot) => {
 //   let books = [];
@@ -16,22 +17,25 @@ import { notesColRef, onSnapshot } from "@/app/firebase/config";
 
 // async function page() {
 function NotesPage() {
+  const { data: session } = useSession();
   const [stateNotes, setNotes] = useState<NoteType[] | null>(null)
+
+  const q = query(notesColRef, where("user_id", "==", session?.user.id ? session?.user?.id  : ''));
  
   useEffect(() => {
     let notes: NoteType[] = [];
-    onSnapshot(notesColRef, (snapshot) => {
+    onSnapshot(q, (snapshot) => {
       notes = [];
       snapshot.docs.forEach((doc) => {
         notes.push({
           body: doc.data().body,
-          user_id: doc.data().body,
+          user_id: doc.data().user_id,
           id: doc.id,
         });
       });
-      console.log(notes);
       setNotes(notes)
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // const response  = await handleGetNotes()

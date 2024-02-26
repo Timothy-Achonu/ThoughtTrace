@@ -13,7 +13,6 @@ import { serverTimestamp } from "@/app/firebase/config";
 
 function NoteCreator() {
   const { data: session } = useSession();
-  console.log(session);
   const [inputValue, setInputValue] = useState("");
   async function onSubmit() {
     console.log({
@@ -22,7 +21,7 @@ function NoteCreator() {
     })
     const response = await createNote({
       body: inputValue,
-      user_id: session?.user?.id ? session?.user?.id : "",
+      user_id: session?.user.id ? session?.user?.id : "",
     });
     console.log(response)
   }
