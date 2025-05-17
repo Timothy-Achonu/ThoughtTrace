@@ -1,1 +1,1 @@
-export * as Logo from './icons/logo.svg';
+export * from './icons'

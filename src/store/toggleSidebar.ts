@@ -3,13 +3,13 @@ import { create } from "zustand";
 interface State {
   // Your state properties go here
   showSidebar: boolean;
-setShowsidebar: () => void;
+toggleSidebar: () => void;
 }
 
 const useToggleSidebar = create<State>((set) => ({
   // Your state initial values go here
   showSidebar: false,
-  setShowsidebar() {
+  toggleSidebar() {
     set((state) => ({
       ...state,
       showSidebar: !state.showSidebar,

@@ -2,17 +2,18 @@
 import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { signup } from "@/lib/actions/authActions";
+import { signup } from "@/lib/auth/actions";
 import { useFormik } from "formik";
-import { signUpValidationSchema } from "@/lib/utils/validationSchema";
+import { signUpValidationSchema } from "../../lib/auth/schemas";
 import Heading from "../atoms/Heading";
 import { Input } from "../atoms/Input";
 import { SubmitButton } from "../atoms/SubmitButton";
 import { Button } from "..";
+import { GoogleIcon } from "@/assets";
 function SignUpForm() {
   const { handleBlur, handleSubmit, handleChange, values, touched, errors } =
     useFormik({
-      initialValues: { email: "", password: "" , confirmPassword: ''},
+      initialValues: { email: "", password: "", confirmPassword: "" },
       validationSchema: signUpValidationSchema,
       onSubmit: () => {},
     });
@@ -78,10 +79,19 @@ function SignUpForm() {
           Sign Up
         </Heading>{" "}
         <form action={onSubmit} className="text-black w-full mt-6">
+          <Button
+            type="button"
+            intent={"outline"}
+            onClick={() => signIn("google")}
+            className="mx-auto "
+          >
+            <GoogleIcon /> <span> Sign Up With Google </span>
+          </Button>
+          <p className="py-6 mx-auto w-fit">OR</p>  
           <div className="mb-4 flex flex-col">
             <Input
               name="email"
-              type="email"
+              type="email"  
               id="email"
               label="Email Address"
               onChange={handleChange}
@@ -109,7 +119,11 @@ function SignUpForm() {
               label="confirm password"
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : ""}
+              error={
+                touched.confirmPassword && errors.confirmPassword
+                  ? errors.confirmPassword
+                  : ""
+              }
               value={values.confirmPassword}
               placeholder="**********"
             />

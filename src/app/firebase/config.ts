@@ -1,11 +1,12 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, collection, getDocs, addDoc, serverTimestamp, onSnapshot, query, where } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp, onSnapshot, query, where, Timestamp, orderBy } from "firebase/firestore";
 import {
   getAuth,
   onAuthStateChanged,
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -24,6 +25,8 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 const db = getFirestore();
 const auth = getAuth();
+const firebaseAuth = getAuth(app);
+
 
 const colRef = collection(db, "todos");
 const notesColRef = collection(db, "notes");
@@ -43,5 +46,9 @@ export {
   serverTimestamp,
   onSnapshot,
   query,
-  where
+  where,
+  Timestamp,
+  firebaseAuth,
+  orderBy
 };
+

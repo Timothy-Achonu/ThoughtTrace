@@ -9,7 +9,7 @@ export default async function AuthLayout({
 }) {
   const session = await getServerSession(options);
   if (session) {
-    permanentRedirect("/daily-questions");
+    permanentRedirect("/notes");
   }
   return (
     <main className="w-full min-h-screen flex ">

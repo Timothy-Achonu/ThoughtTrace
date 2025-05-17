@@ -1,59 +1,70 @@
 "use client";
 import DashboardLayout from "@/components/templates/DashboardLayout";
-import NoteCreator from "@/components/molecules/NoteCreator";
-import { handleGetNotes } from "@/lib/services/noteServices";
-import { NoteType } from "@/lib/types/notes";
-import { useState, useEffect } from "react";
-import { notesColRef, onSnapshot, query, where } from "@/app/firebase/config";
-import { useSession } from "next-auth/react";
+import NoteCreator from "@/app/(dashboard)/notes/components/NoteCreator";
+import { NotesGroupedByDateType, NoteType } from "@/lib/notes";
+import { useNotesContext } from "./context";
+import { SkeletonLoader } from "@/components/ui";
+import { getFormattedDate } from "@/utils";
 
-// onSnapshot(colRef, (snapshot) => {
-//   let books = [];
-//       snapshot.docs.forEach((doc) => {
-//         books.push({ ...doc.data(), id: doc.id });
-//       });
-//       console.log(books);
-// })
-
-// async function page() {
 function NotesPage() {
-  const { data: session } = useSession();
-  const [stateNotes, setNotes] = useState<NoteType[] | null>(null)
-
-  const q = query(notesColRef, where("user_id", "==", session?.user.id ? session?.user?.id  : ''));
- 
-  useEffect(() => {
-    let notes: NoteType[] = [];
-    onSnapshot(q, (snapshot) => {
-      notes = [];
-      snapshot.docs.forEach((doc) => {
-        notes.push({
-          body: doc.data().body,
-          user_id: doc.data().user_id,
-          id: doc.id,
-        });
-      });
-      setNotes(notes)
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // const response  = await handleGetNotes()
-  // console.log(response)
+  const { stateNotes, isLoadingNotes } = useNotesContext();
 
   return (
-    <DashboardLayout header="Notes" footer={<NoteCreator />}>
-      <section className="flex flex-col justify-between">
-        <div>
-          <p> Here, your notes will go...</p>
-          <ul>
-            {(stateNotes as NoteType[])?.map((note: NoteType) => {
-              return <li key={note.id}> {note.body} </li>;
-            })}
-          </ul>
-        </div>
-      </section>
-    </DashboardLayout>
+    <>
+      <DashboardLayout
+        header="Notes"
+        footer={<NoteCreator />}
+        addHeaderArrowBack
+      >
+        {/* <div className="flex-1"> */}
+        {isLoadingNotes ? (
+          <div className="flex flex-col items-end gap-6 pr-4">
+            {new Array(5).fill("k").map((item) => (
+              <>
+                <SkeletonLoader
+                  key={crypto.randomUUID()}
+                  width="150px"
+                  height="25px"
+                />
+              </>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-6 pr-4">
+            {(stateNotes as NotesGroupedByDateType[])?.map(
+              ({ day, notes }, index) => {
+                return (
+                  <ul className="" key={index}>
+                    {" "}
+                    <p className="bg-blue-700 py-2 px-3 rounded-md"> {day} </p>
+                    <li className="flex flex-col gap-6 items-end mt-6">
+                      {notes.map((note, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="bg-primary-main rounded-md px-2 py-1 relative flex gap-2 max-w-[24rem]"
+                          >
+                            <p className=""> {note.body} </p>
+
+                            <span className=" bottom-1 right-2 text-[0.625rem] self-end">
+                              {" "}
+                              {note.createdAt
+                                ? getFormattedDate(note.createdAt).time
+                                : "*"}{" "}
+                            </span>
+                          </div>
+                        );  
+                      })}
+                    </li>
+                  </ul>
+                );  
+              }
+            )}
+          </div>
+        )}
+        {/* </div> */}
+      </DashboardLayout>
+    </>
   );
 }
 export default NotesPage;

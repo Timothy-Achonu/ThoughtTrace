@@ -24,14 +24,14 @@ const config: Config = {
       colors: {
         "primary-main": "hsl(218, 28%, 13%)",
         "primary-main-trans": "hsla(218, 28%, 13%, 0.6)",
-        "primary-footer": "hsl(216, 53%, 9%)",
+        "secondary": "hsl(216, 53%, 9%)",
         "primary-intro": "hsl(217, 28%, 15%)",
         "primary-testimonials": "hsl(219, 30%, 18%)",
         "accent-cyan": "hsl(176, 68%, 64%)",
         "accent-blue": "hsl(198, 60%, 50%)",
         "primary-error": "hsl(0, 100%, 63%)",
         "neutral-main": "hsl(0, 0%, 100%)",
-        "error-1": "red",
+        "error-1": "red",  
       },
       boxShadow: {
         "btn-primary": "4px 4px 0px 0px rgb(0, 0, 0)",
