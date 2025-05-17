@@ -20,7 +20,6 @@ import { getFormattedDate } from "@/utils";
 import { Timestamp } from "@/app/firebase/config";
 import dayjs from "dayjs";
 
-
 interface NotesContextProps {
   stateNotes: NotesGroupedByDateType[] | null;
   setNotes: React.Dispatch<
@@ -45,41 +44,26 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
   const userId = session?.user.id;
 
   const groupNotesByDate = (notes: NoteType[]) => {
-    const groupNotes: { day: string; notes: NoteType[] }[] = [];
-    for (let i = 0; i < notes.length; i++) {
-      const currentNoteTimeStap = notes[i].createdAt;
-      // let currentDay = currentNoteTimeStap ? getFormattedDate(currentNoteTimeStap) : dayjs(new Date()).format("DD MMMM YYYY")
-      let currentDay = getFormattedDate(currentNoteTimeStap as Timestamp).day;
-      groupNotes.push({ day: currentDay, notes: [] });
-      notes.forEach((note) => {
-        getFormattedDate(note.createdAt as Timestamp).day === currentDay &&
-          groupNotes[i].notes.push(note);
-      });
-    }
-    return groupNotes;
+    const groupMap = new Map<string, NoteType[]>();
+
+    notes.forEach((note) => {
+      const currentDay = getFormattedDate(note.createdAt as Timestamp).day;
+      if (!groupMap.has(currentDay)) {
+        groupMap.set(currentDay, []);
+      }
+      groupMap.get(currentDay)!.push(note);
+    });
+
+    return Array.from(groupMap, ([day, notes]) => ({ day, notes }));
   };
-  // [
-  //   {
-  //     day: Timestamp,
-  //     notes: Notes[]
-  //   },
-  //   {
-  //     day: Timestamp,
-  //     notes: Notes[]
-  //   },
-  //   //more day chunks
-  // ]
 
   useEffect(() => {
     if (!userId) return;
-    //const q = query(notesColRef, where("user_id", "==", userId));
     const q = query(
       notesColRef,
       where("user_id", "==", userId),
       orderBy("createdAt", "asc")
     );
-
-    // or "asc" for ascending order
 
     setIsLoadingNotes(true);
 
@@ -95,8 +79,6 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
         });
       });
       setIsLoadingNotes(false);
-      console.log({ notes, group: groupNotesByDate(notes) });
-
       setNotes(groupNotesByDate(notes));
     });
     return () => unsubscribe(); // cleanup
