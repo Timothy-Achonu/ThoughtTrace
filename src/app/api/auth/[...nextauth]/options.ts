@@ -3,7 +3,11 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { signin } from "@/lib/auth/actions";
-import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
 import { firebaseAuth } from "@/app/firebase/config";
 
 // Some random ideas. I think I kind of get this next-auth, firebase stuff:
@@ -21,7 +25,6 @@ import { firebaseAuth } from "@/app/firebase/config";
 
 //Hold on! it's like firebase auth automatically handles persistent login too. But the issue is: Would I be able to access the users session in a server component?
 
-  console.log(" NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 
 export const options: NextAuthOptions = {
   pages: {
@@ -74,14 +77,15 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
+  debug: true,
+
   callbacks: {
     async jwt({ token, user }) {
-
       if (user) token.id = user.id;
       return { ...token, ...user };
     },
     async signIn({ user, account, profile }) {
-      if (account?.provider === 'google') {
+      if (account?.provider === "google") {
         try {
           const credential = GoogleAuthProvider.credential(account.id_token);
           await signInWithCredential(firebaseAuth, credential);
