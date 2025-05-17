@@ -11,6 +11,8 @@ export default async function AuthLayout({
   if (session) {
     permanentRedirect("/notes");
   }
+  console.log("In auth layout: NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+
   return (
     <main className="w-full min-h-screen flex ">
       {/* On the left-hand side on  desktop screens, 
@@ -22,6 +24,7 @@ export default async function AuthLayout({
       >
         It&apos;s good to keep Journals
       </div>
+      check 1
       <div
         className="bg-white text-black min-h-screen flex 
       flex-col justify-center place-items-center w-full overflow-y-scroll"

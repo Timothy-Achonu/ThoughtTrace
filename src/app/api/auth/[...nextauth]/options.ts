@@ -21,6 +21,7 @@ import { firebaseAuth } from "@/app/firebase/config";
 
 //Hold on! it's like firebase auth automatically handles persistent login too. But the issue is: Would I be able to access the users session in a server component?
 
+  console.log(" NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 
 export const options: NextAuthOptions = {
   pages: {
