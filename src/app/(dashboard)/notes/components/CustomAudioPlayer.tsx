@@ -24,14 +24,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
   const [wavesurfer, setWavesurfer] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const onReady = (ws) => {
-    setWavesurfer(ws)
-    setIsPlaying(false)
-  }
+  // const onReady = (ws) => {
+  //   setWavesurfer(ws)
+  //   setIsPlaying(false)
+  // }
 
-  const onPlayPause = () => {
-    wavesurfer && wavesurfer.playPause()
-  }  
+  // const onPlayPause = () => {
+  //   wavesurfer && wavesurfer.playPause()
+  // }  
 
   return (
     <>
@@ -39,12 +39,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
         height={100}
         waveColor="violet"
         url={audioUrl}
-        onReady={onReady}
+        // onReady={onReady}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       />
 
-      <button onClick={onPlayPause}>{isPlaying ? "Pause" : "Play"}</button>
+      {/* <button onClick={onPlayPause}>{isPlaying ? "Pause" : "Play"}</button> */}
     </>
   );
 };
