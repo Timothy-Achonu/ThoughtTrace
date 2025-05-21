@@ -1,5 +1,5 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, collection, getDocs, addDoc, serverTimestamp, onSnapshot, query, where, Timestamp, orderBy } from "firebase/firestore";
+import { initializeApp, getApps, getApp, } from "firebase/app";
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp, onSnapshot, query, where, Timestamp, orderBy,  } from "firebase/firestore";
 import {
   getAuth,
   onAuthStateChanged,
@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
 
 } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -30,6 +31,11 @@ const firebaseAuth = getAuth(app);
 
 const colRef = collection(db, "todos");
 const notesColRef = collection(db, "notes");
+const functions = getFunctions(app); 
+const getServerTime = httpsCallable<{},{ now: Timestamp }>(
+  functions,
+  "getServerTime"
+);
 
 export {
   app,
@@ -49,6 +55,8 @@ export {
   where,
   Timestamp,
   firebaseAuth,
-  orderBy
+  orderBy,
+  functions,
+  getServerTime,
 };
 

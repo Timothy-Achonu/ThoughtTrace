@@ -1,18 +1,27 @@
 import { Timestamp } from "@/app/firebase/config";
 import dayjs from "dayjs";
 
-export const getFormattedDate = (timestamp: Timestamp) => {
-  const seconds = timestamp?.seconds || 0;
-  const nanoseconds = timestamp?.nanoseconds || 0;
+export const getFormattedDate = (date: Timestamp | string) => {
+  if (!(date as Timestamp)?.seconds) {
+    const dateIsSting = date as string;
+    return {
+      time: dayjs(dateIsSting).format("HH:mm"),
+      day: dayjs(dateIsSting).format("DD MMMM YYYY"),
+      fullDate: dayjs(dateIsSting).format(),
+    };
+  }
+  const dateIsTimeStamp = date as Timestamp;
+
+  const seconds = dateIsTimeStamp?.seconds || 0;
+  const nanoseconds = dateIsTimeStamp?.nanoseconds || 0;
   // Convert to milliseconds
   const milliseconds = seconds * 1000 + nanoseconds / 1_000_000;
 
   // Create Date object
-  const date = new Date(milliseconds);
+  const dateFromTimeStamp = new Date(milliseconds);
   return {
-    time: dayjs(date).format("HH:mm"),
-    day: dayjs(date).format("DD MMMM YYYY"),
-    fullDate: dayjs(date).format(),
+    time: dayjs(dateFromTimeStamp).format("HH:mm"),
+    day: dayjs(dateFromTimeStamp).format("DD MMMM YYYY"),
+    fullDate: dayjs(dateFromTimeStamp).format(),
   };
-};
-  
+};  

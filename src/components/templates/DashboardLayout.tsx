@@ -2,6 +2,7 @@
 import { ClassNameValue, twMerge } from "tailwind-merge";
 import { MdArrowBack } from "react-icons/md";
 import useToggleSidebar from "@/store/toggleSidebar";
+import { useCallback, useEffect, useRef } from "react";
 
 type DashboardLayoutPropsType = {
   children: React.ReactNode;
@@ -22,6 +23,21 @@ function DashboardLayout({
   footerCustomClassName,
   addHeaderArrowBack,
 }: DashboardLayoutPropsType) {
+
+    const mainContentScrollRef = useRef<HTMLDivElement | null>(null);
+  
+    const scrollToMainContentBottom = useCallback(() => {
+      // setTimeout(() => {
+        mainContentScrollRef.current?.scrollIntoView({
+          block: "start",
+          behavior: "smooth",
+        });
+      // }, 10);   
+    }, []);
+    useEffect(() => {
+      scrollToMainContentBottom();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    });
 
   return (
     <section
@@ -60,8 +76,13 @@ function DashboardLayout({
           )}
         </header>
       )}
-      <main className="overflow-y-scroll flex-1 ">{children}</main>
-      {footer && (
+      <main className="overflow-y-scroll flex-1 relative">{children}
+          <div
+          ref={mainContentScrollRef}
+          className="invisible absolute  w-10 ml-auto "
+        ></div>{" "}
+      </main>  
+      {footer && (    
         <div
           className={twMerge(
             `sticky grid items-center rounded-xl shadow-sm px-0 md:px-8  py-4 bottom-0 

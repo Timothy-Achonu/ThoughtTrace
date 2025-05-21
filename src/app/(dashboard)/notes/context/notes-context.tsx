@@ -35,27 +35,30 @@ interface NotesProviderProps {
   children: ReactNode;
 }
 
+export const groupNotesByDate = (notes: NoteType[]) => {
+  const groupMap = new Map<string, NoteType[]>();
+  const todayDate = new Date();
+  notes.forEach((note) => {
+    const createdAt = note.createdAt || todayDate;
+    const currentDay = getFormattedDate(createdAt as Timestamp).day;
+    // console.log({NcurrentDate: getFormattedDate(todayDate).day, })
+    if (!groupMap.has(currentDay)) {
+      groupMap.set(currentDay, []);
+    }
+    groupMap.get(currentDay)!.push(note);
+  });
+
+  return Array.from(groupMap, ([day, notes]) => ({ day, notes }));
+};
+
 export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
   const { data: session } = useSession();
+
   const [stateNotes, setNotes] = useState<NotesGroupedByDateType[] | null>(
     null
   );
   const [isLoadingNotes, setIsLoadingNotes] = useState(true);
   const userId = session?.user.id;
-
-  const groupNotesByDate = (notes: NoteType[]) => {
-    const groupMap = new Map<string, NoteType[]>();
-
-    notes.forEach((note) => {
-      const currentDay = getFormattedDate(note.createdAt as Timestamp).day;
-      if (!groupMap.has(currentDay)) {
-        groupMap.set(currentDay, []);
-      }
-      groupMap.get(currentDay)!.push(note);
-    });
-
-    return Array.from(groupMap, ([day, notes]) => ({ day, notes }));
-  };
 
   useEffect(() => {
     if (!userId) return;
@@ -73,13 +76,18 @@ export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
       snapshot.docs.forEach((doc) => {
         notes.push({
           body: doc.data().body,
+          downloadURL: doc.data().downloadURL,
           user_id: doc.data().user_id,
           id: doc.id,
-          createdAt: doc.data().createdAt,
+          createdAt: doc.data().createdAt,   
         });
       });
       setIsLoadingNotes(false);
-      setNotes(groupNotesByDate(notes));
+      const groups = groupNotesByDate(notes);
+      const lastGroup = groups[groups.length - 1];
+      // if (lastGroup?.notes[lastGroup.notes.length - 1].createdAt) {
+      setNotes(groups);
+      // }
     });
     return () => unsubscribe(); // cleanup
 

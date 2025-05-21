@@ -1,8 +1,11 @@
 import { Timestamp } from "@/app/firebase/config";
 
 export type CreateNoteType = {
-  body: string;
+  body?: string;
   user_id: string;
+  downloadURL?: string;
+
+
 };
 
 export type NoteType = CreateNoteType & {
