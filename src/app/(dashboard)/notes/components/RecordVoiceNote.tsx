@@ -12,8 +12,13 @@ import { CiTrash } from "react-icons/ci";
 import { IoSend } from "react-icons/io5";
 
 const RecordVoiceNote: React.FC = () => {
-  const { isRecording, startRecording, stopRecording, discardRecording } =
-    useAudioRecorder();
+  const {
+    isRecording,
+    startRecording,
+    stopRecording,
+    discardRecording,
+    recordingTime,
+  } = useAudioRecorder();
 
   const handleRecordToggle = () => {
     isRecording ? stopRecording() : startRecording();
@@ -40,7 +45,7 @@ const RecordVoiceNote: React.FC = () => {
             {" "}
             <CiTrash className="text-red-400 text-[2rem]" />
           </button>
-
+          <p> {recordingTime} </p>
           <button type="button" onClick={stopRecording}>
             {" "}
             <IoSend className="text-accent-blue text-[1.5rem]" />{" "}

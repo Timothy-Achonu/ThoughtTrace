@@ -1,5 +1,4 @@
-// hooks/useAudioRecorder.ts
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { createNote, NotesGroupedByDateType, NoteType } from "@/lib";
 import { useSession } from "next-auth/react";
@@ -12,26 +11,35 @@ const arrangeNotes = (
   newNote: NoteType
 ) => {
   const today = dayjs().format("DD MMMM YYYY");
-  return (
-    notesGroupByDate?.map((group) =>
-      group.day === today
-        ? {
-            ...group,
-            notes: [...group.notes, newNote],
-          }
-        : group
-    ) || null
-  );
+  const existingGroup = notesGroupByDate?.find((group) => group.day === today);
+  if (existingGroup) {
+    return (
+      notesGroupByDate?.map((group) =>
+        group.day === today
+          ? {
+              ...group,
+              notes: [...group.notes, newNote],
+            }
+          : group
+      ) || null
+    );
+  } else {
+    return notesGroupByDate
+      ? [...notesGroupByDate, { day: today, notes: [newNote] }]
+      : notesGroupByDate;
+  }
 };
 
 const useAudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const shouldSaveRef = useRef<boolean>(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { data: session } = useSession();
   const { setNotes, stateNotes } = useNotesContext();
 
@@ -42,7 +50,11 @@ const useAudioRecorder = () => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
-      shouldSaveRef.current = true; // Indicate that we intend to save this recording
+      shouldSaveRef.current = true;
+      setRecordingTime(0); // Reset time
+      intervalRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1);
+      }, 1000);
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -51,11 +63,14 @@ const useAudioRecorder = () => {
       };
 
       mediaRecorder.onstop = () => {
+        clearInterval(intervalRef.current!);
+        intervalRef.current = null;
+
         if (!shouldSaveRef.current) {
-          // Discard the recording
           audioChunksRef.current = [];
           setAudioBlob(null);
           setAudioURL(null);
+          setRecordingTime(0);
           return;
         }
 
@@ -68,10 +83,9 @@ const useAudioRecorder = () => {
           downloadURL: url,
           user_id: (session as Session).user.id as string,
         };
+        console.log({ newNote });
         setAudioURL(url);
-        setNotes((prev) => {
-          return arrangeNotes(prev, newNote);
-        });
+        setNotes((prev) => arrangeNotes(prev, newNote));
 
         const uploadAudioAndCreateNote = async () => {
           try {
@@ -102,7 +116,7 @@ const useAudioRecorder = () => {
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state !== "inactive"
     ) {
-      shouldSaveRef.current = true; // Ensure we save this recording
+      shouldSaveRef.current = true;
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
@@ -113,7 +127,7 @@ const useAudioRecorder = () => {
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state !== "inactive"
     ) {
-      shouldSaveRef.current = false; // Indicate we do not want to save this recording
+      shouldSaveRef.current = false;
       mediaRecorderRef.current.stop();
     }
 
@@ -122,16 +136,23 @@ const useAudioRecorder = () => {
       streamRef.current = null;
     }
 
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     audioChunksRef.current = [];
     setAudioBlob(null);
     setAudioURL(null);
     setIsRecording(false);
+    setRecordingTime(0);
   };
 
   return {
     isRecording,
     audioURL,
     audioBlob,
+    recordingTime,
     startRecording,
     stopRecording,
     discardRecording,

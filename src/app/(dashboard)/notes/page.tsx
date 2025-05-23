@@ -67,22 +67,22 @@ function NotesPage() {
                             {note?.body ? (
                               <p className=""> {note.body} </p>
                             ) : (
-                              <div className="w-full min-w-[12rem]">
+                              <div className="flex-1 min-w-[12rem]">
                                 {/* <AudioPlayer audioUrl={note.downloadURL as string} /> */}
-                                <audio src={note.downloadURL} controls>Audio</audio>
+                                <audio className="max-w-[MIN(340px,60vw)]" src={note.downloadURL} controls></audio>
                               </div> 
                             )}
 
-                            <div className="min-w-[1.594rem] bottom-1 right-2 text-[0.625rem] self-end flex justify-end">
+                            <div className="min-w-[1.594rem] text-[0.625rem] self-end flex justify-end">
                               {" "}
                               {note.createdAt ? (
                                 getFormattedDate(note.createdAt).time
-                              ) : (
+                              ) : (  
                                 <ClockIcon />
                               )}  
                             </div>
-                          </div>
-                        );
+                          </div>      
+                        );    
                       })}
                     </li>
                   </ul>
