@@ -7,7 +7,8 @@ import { SkeletonLoader } from "@/components/ui";
 import { getFormattedDate } from "@/utils";
 import { ClockIcon } from "@/assets";
 import { useCallback, useEffect, useRef } from "react";
-// import { AudioPlayer } from "./components";
+import { CustomAudioPlayer } from "./components";
+import { AudioWaveform } from "./components";
 
 function NotesPage() {
   const { stateNotes, isLoadingNotes } = useNotesContext();
@@ -35,6 +36,7 @@ function NotesPage() {
         {/* <div className="flex-1"> */}
         <div className="max-w-[MIN(340px,70vw)] mx-auto text-clip font-semibold font-sans text-center text-xs mb-9">
           <p>This is the begining of your conversation with yourself....</p>
+          check VN to Tim and I: audioURLissueTwo
         </div>
         {isLoadingNotes ? (
           <div className="flex flex-col items-end gap-6 pr-4">
@@ -53,7 +55,7 @@ function NotesPage() {
                 return (
                   <ul className="" key={index}>
                     {" "}
-                    <p className="bg-accent-blue py-2 px-3 rounded-md max-w-[MIN(340px,70vw)] mx-auto text-center">
+                    <p className="bg-accent-blue py-1 px-2 rounded-md max-w-[MIN(340px,70vw)] w-fit mx-auto text-center sticky top-0 z-10 text-[0.75rem]">
                       {" "}
                       {day}{" "}
                     </p>
@@ -64,25 +66,27 @@ function NotesPage() {
                             key={index}
                             className="bg-primary-main rounded-md px-2 py-1 relative flex gap-2 max-w-[24rem]"
                           >
+                            check VN to Tim and I: audioURLissueTwo
                             {note?.body ? (
                               <p className=""> {note.body} </p>
                             ) : (
                               <div className="flex-1 min-w-[12rem]">
-                                {/* <AudioPlayer audioUrl={note.downloadURL as string} /> */}
-                                <audio className="max-w-[MIN(340px,60vw)]" src={note.downloadURL} controls></audio>
-                              </div> 
+                                <AudioWaveform
+                                  audioUrl={note.downloadURL as string}
+                                />
+                                {/* <audio className="max-w-[MIN(340px,60vw)]" src={note.downloadURL} controls></audio> */}
+                              </div>
                             )}
-
                             <div className="min-w-[1.594rem] text-[0.625rem] self-end flex justify-end">
                               {" "}
                               {note.createdAt ? (
                                 getFormattedDate(note.createdAt).time
-                              ) : (  
+                              ) : (
                                 <ClockIcon />
-                              )}  
+                              )}
                             </div>
-                          </div>      
-                        );    
+                          </div>
+                        );
                       })}
                     </li>
                   </ul>
@@ -97,4 +101,3 @@ function NotesPage() {
   );
 }
 export default NotesPage;
-  

@@ -5,7 +5,8 @@ import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import dayjs from "dayjs";
 import { useNotesContext } from "../context";
-
+import { formatSecondsToMMSS } from "@/utils";
+  
 const arrangeNotes = (
   notesGroupByDate: NotesGroupedByDateType[] | null,
   newNote: NoteType
@@ -83,7 +84,6 @@ const useAudioRecorder = () => {
           downloadURL: url,
           user_id: (session as Session).user.id as string,
         };
-        console.log({ newNote });
         setAudioURL(url);
         setNotes((prev) => arrangeNotes(prev, newNote));
 
@@ -147,12 +147,11 @@ const useAudioRecorder = () => {
     setIsRecording(false);
     setRecordingTime(0);
   };
-
   return {
     isRecording,
     audioURL,
     audioBlob,
-    recordingTime,
+    recordingTime: formatSecondsToMMSS(recordingTime),
     startRecording,
     stopRecording,
     discardRecording,

@@ -1,52 +1,68 @@
-// components/AudioPlayer.tsx
-import React, { useRef, useState, useEffect } from "react";
-import WaveSurfer from "wavesurfer.js";
-import { FaPlay, FaPause } from "react-icons/fa";
-import WavesurferPlayer from "@wavesurfer/react";
+// React example
+// See https://github.com/katspaugh/wavesurfer-react
 
-interface AudioPlayerProps {
-  audioUrl: string;
-}
+import React, { useMemo, useState, useCallback, useRef } from "react";
+import { useWavesurfer } from "@wavesurfer/react";
+import Timeline from "wavesurfer.js/dist/plugins/timeline.esm.js";
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioUrl }) => {
-  const waveformRef = useRef<HTMLDivElement | null>(null);
-  const [duration, setDuration] = useState("0:00");
-  const [currentTime, setCurrentTime] = useState("0:00");
+const audioUrls = [
+  "/examples/audio/audio.wav",
+  "/examples/audio/stereo.mp3",
+  "/examples/audio/mono.mp3",
+  "/examples/audio/librivox.mp3",
+];
 
+const formatTime = (seconds: number) =>
+  [seconds / 60, seconds % 60]
+    .map((v) => `0${Math.floor(v)}`.slice(-2))
+    .join(":");
 
+// A React component that will render wavesurfer
+export const CustomAudioPlayer = ({ audioUrl }: { audioUrl: string }) => {
+  const containerRef = useRef(null);
+  const [urlIndex, setUrlIndex] = useState(0);
 
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-  };
+  const mediaElement = useMemo(() => {
+    const audio = new Audio();
+    audio.crossOrigin = "anonymous"; // ← key bit for CORS
+    audio.src = audioUrl;
+    return audio;
+  }, [audioUrl]);
 
-  const [wavesurfer, setWavesurfer] = useState(null)
-  const [isPlaying, setIsPlaying] = useState(false)
+  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
+    container: containerRef,
+    backend: "MediaElement", 
+    media: mediaElement,
+    height: 100,
+    waveColor: "rgb(200, 0, 200)",
+    progressColor: "rgb(100, 0, 100)",
+    url: audioUrl,
+    plugins: useMemo(() => [Timeline.create()], []),
+  });
 
-  // const onReady = (ws) => {
-  //   setWavesurfer(ws)
-  //   setIsPlaying(false)
-  // }
+  const onUrlChange = useCallback(() => {
+    setUrlIndex((index) => (index + 1) % audioUrls.length);
+  }, []);
 
-  // const onPlayPause = () => {
-  //   wavesurfer && wavesurfer.playPause()
-  // }  
+  const onPlayPause = useCallback(() => {    
+    wavesurfer && wavesurfer.playPause();    
+  }, [wavesurfer]);
 
   return (
     <>
-      <WavesurferPlayer
-        height={100}
-        waveColor="violet"
-        url={audioUrl}
-        // onReady={onReady}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      />
+      <div ref={containerRef} />
 
-      {/* <button onClick={onPlayPause}>{isPlaying ? "Pause" : "Play"}</button> */}
+      <p>Current audio: {audioUrls[urlIndex]}</p>
+
+      <p>Current time: {formatTime(currentTime)}</p>
+
+      <div style={{ margin: "1em 0", display: "flex", gap: "1em" }}>
+        <button onClick={onUrlChange}>Change audio</button>
+
+        <button onClick={onPlayPause} style={{ minWidth: "5em" }}>
+          {isPlaying ? "Pause" : "Play"}
+        </button>
+      </div>
     </>
   );
 };
-
-export { AudioPlayer };
