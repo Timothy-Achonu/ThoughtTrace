@@ -8,8 +8,7 @@ type LayoutProps = {
 function layout({ children }: LayoutProps) {
   return (
     <section
-      className=" min-h-screen
-    items-center gap-3 w-full"
+      className="min-h-screen items-center gap-3 w-full"
     >
       <header>
         <Navbar />{" "}
@@ -20,3 +19,4 @@ function layout({ children }: LayoutProps) {
   );
 }
 export default layout;
+  

@@ -1,36 +1,27 @@
 "use client";
 import { Logo } from "@/assets";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../index";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import { MdOutlineCancel } from "react-icons/md";
-import { onAuthStateChanged, auth } from "../../app/firebase/config";
-import { signoutFirebase } from "@/lib/services/authServices";
 
 export function Navbar() {
   const { data: session } = useSession();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const handleLogOut = async () => {
-    const result = await signoutFirebase();
-    signOut();
-  };
-  // onAuthStateChanged(auth, (user) => {
-  //   console.log("user status changed:", user);
-  // });
 
   return (
     <nav className={`flex py-8 md:px-14 px-6 justify-between items-center`}>
       <Link href="/">
-        <Image
+        {/* <Image
           className="h-[70px] w-[80px] md:h-[90px] md:[100px] object-contain"
           src={Logo}
           height={"75"}
           width={"67.55"}
           alt="logo"
-        />
+        /> */}
+        <Logo />
       </Link>
       <div
         className={`flex md:flex-row md:h-auto md:gap-4 md:py-0
@@ -44,17 +35,17 @@ export function Navbar() {
           Home
         </Button>
         <Button intent={"ghost"} isLink={true} href="/about">
-          About Us
+          About us
         </Button>
 
         {session?.user ? (
-          <Button className="" onClick={handleLogOut}>
-            Sign Out
+          <Button className="" isLink={true} href="/notes">
+            Dashboard
           </Button>
         ) : (
           <>
             {" "}
-            <Button isLink={true} href="/api/auth/signin">
+            <Button isLink={true} href="/signin">
               Sign in
             </Button>
             <Button isLink={true} href="/signup">

@@ -1,6 +1,14 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { initializeApp, getApps, getApp, } from "firebase/app";
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp, onSnapshot, query, where, Timestamp, orderBy,  } from "firebase/firestore";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+
+} from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,14 +21,42 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 // const app = initializeApp(firebaseConfig);
 
 const db = getFirestore();
 const auth = getAuth();
+const firebaseAuth = getAuth(app);
+
 
 const colRef = collection(db, "todos");
+const notesColRef = collection(db, "notes");
+const functions = getFunctions(app); 
+const getServerTime = httpsCallable<{},{ now: Timestamp }>(
+  functions,
+  "getServerTime"
+);
 
+export {
+  app,
+  auth,
+  db,
+  colRef,
+  getDocs,
+  onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  addDoc,
+  notesColRef,
+  serverTimestamp,
+  onSnapshot,
+  query,
+  where,
+  Timestamp,
+  firebaseAuth,
+  orderBy,
+  functions,
+  getServerTime,
+};
 
-
-export { app, auth, db, colRef, getDocs, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword};

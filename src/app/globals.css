@@ -73,3 +73,16 @@
   border-radius: 8px;
 }
 
+
+/*Used to remove the autofill styles  the browser applies to input fields by default*/
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:focus,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+input[data-autocompleted] {
+  background-color: transparent !important;
+}
+

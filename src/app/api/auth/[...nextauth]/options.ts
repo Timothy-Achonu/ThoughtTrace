@@ -2,8 +2,13 @@ import type { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { signin } from "@/lib/services/authServices";
-
+import { signin } from "@/lib/auth/actions";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
+import { firebaseAuth } from "@/app/firebase/config";
 
 // Some random ideas. I think I kind of get this next-auth, firebase stuff:
 
@@ -20,6 +25,7 @@ import { signin } from "@/lib/services/authServices";
 
 //Hold on! it's like firebase auth automatically handles persistent login too. But the issue is: Would I be able to access the users session in a server component?
 
+
 export const options: NextAuthOptions = {
   pages: {
     signIn: "/signin",
@@ -30,8 +36,8 @@ export const options: NextAuthOptions = {
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_ID as string,
-      clientSecret: process.env.GOOGLE_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -57,34 +63,48 @@ export const options: NextAuthOptions = {
           return null;
         }
 
-        const {res, error} = await signin( credentials.email, credentials.password,);
-        console.log(res)
-        console.log(error)
-          // const res = { id: "42", name: "Ifechi", password: "nextauth" };
-
+        const { res, error } = await signin(
+          credentials.email,
+          credentials.password
+        );
+        console.log(res);
+        console.log(error);
         if (res) {
           return res;
-        }else {
-          return null
+        } else {
+          return null;
         }
-        // throw new Error(JSON.stringify(error));
       },
-
-      // async authorize(credentials) {
-        //This is where you need to retrieve user data-
-        //to verify with credentials
-        //Docs: https://next-auth.js.org/configuration/providers/credentials
-      //   console.log({ credentials });
-      //   const user = { id: "42", name: "Ifechi", password: "nextauth" };
-      //   if (
-      //     credentials?.email === user.name &&
-      //     credentials?.password === user.password
-      //   ) {
-      //     return user;
-      //   } else {
-      //     return null;
-      //   }
-      // },
     }),
   ],
+  debug: true,
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) token.id = user.id;
+      return { ...token, ...user };
+    },
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "google") {
+        try {
+          const credential = GoogleAuthProvider.credential(account.id_token);
+          await signInWithCredential(firebaseAuth, credential);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }
+      return true;
+    },
+
+    async session({ session, token, user }) {
+      // const { user: userData } = token as { user: any };
+      // session.accessToken = token.accessToken as string;
+      // console.log(token)
+      session.user = { email: token.email, id: token.sub };
+
+      // console.log("SESSION::: ", session);
+      return session;
+    },
+  },
 };

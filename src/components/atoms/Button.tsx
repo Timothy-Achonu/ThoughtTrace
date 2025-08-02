@@ -16,7 +16,8 @@ const button = cva(
     "transition-all",
     "hover:scale-[1.02]",
     "rounded-[4px]",
-    "raleway-font"
+    "raleway-font",
+    "whitespace-nowrap",
   ],
   {
     variants: {
@@ -32,9 +33,6 @@ const button = cva(
           "text-accent-blue",
           "border",
           "border-accent-blue",
-          "hover:bg-accent-blue",
-          "hover:text-neutral-main",
-          "hover:border-none",
           "disabled:opacity-25",
         ],
         ghost: [
@@ -47,8 +45,13 @@ const button = cva(
       },
       size: {
         small: ["text-[0.875rem]", "py-1", "px-2"],
-        medium: ["text-[1rem]", "py-3", "px-4", "font-[500]"],
-        large: ["text-[1.125rem]", "py-3", "px-5", "font-[900]"],
+        medium: [
+          "text-[0.875rem] md:text-[1rem]",
+          "py-3",
+          "px-4",
+          "font-[500]",
+        ],
+        large: ["text-[1rem] md:text-[1.125rem]", "py-3", "px-5", "font-[900]"],
       },
       btnType: {
         btn: "",
