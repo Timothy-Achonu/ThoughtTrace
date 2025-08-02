@@ -35,8 +35,7 @@ function NotesPage() {
       >
         {/* <div className="flex-1"> */}
         <div className="max-w-[MIN(340px,70vw)] mx-auto text-clip font-semibold font-sans text-center text-xs mb-9">
-          <p>This is the begining of your conversation with yourself....</p>
-          check VN to Tim and I: audioURLissueTwo
+          <p>This is the begining of a conversation with yourself....</p>
         </div>
         {isLoadingNotes ? (
           <div className="flex flex-col items-end gap-6 pr-4">
@@ -66,7 +65,6 @@ function NotesPage() {
                             key={index}
                             className="bg-primary-main rounded-md px-2 py-1 relative flex gap-2 max-w-[24rem]"
                           >
-                            check VN to Tim and I: audioURLissueTwo
                             {note?.body ? (
                               <p className=""> {note.body} </p>
                             ) : (

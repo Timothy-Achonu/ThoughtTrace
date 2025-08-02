@@ -23,7 +23,6 @@ export function AudioWaveform({
   // Convert base64 to blob and create object URL
   useEffect(() => {
     if (!audioUrl) return;
-    console.log({ audioUrl });
     let url = "";
 
     try {
@@ -54,7 +53,6 @@ export function AudioWaveform({
     } catch (error) {
       console.error("Error converting audio data:", error);
     }
-    console.log({ url, audioUrl });
 
     // Cleanup function to revoke object URL
     return () => {
@@ -76,12 +74,10 @@ export function AudioWaveform({
         (acc, char) => acc + char.charCodeAt(0),
         0
       );
-      console.log({ seed, audioUrl });
       const data = Array.from({ length: bars }, (_, i) => {
         const pseudoRandom = Math.sin(seed + i * 0.5) * 0.5 + 0.5;
         return pseudoRandom * 0.8 + 0.2;
       });
-      console.log({ data });
       setWaveformData(data);
     };
     generateWaveform();
@@ -173,8 +169,6 @@ export function AudioWaveform({
       if (isPlaying) {
         audio.pause();
       } else {
-        // Ensure audio is ready before playing
-        console.log({ isPlaying, readyState });
 
         if (readyState >= 2) {
           await audio.play();
@@ -219,8 +213,6 @@ export function AudioWaveform({
 
   const progress =
     audioDuration > 0 ? Math.min(1, currentTime / audioDuration) : 0;
-
-  console.log({ progress, audioDuration, currentTime });
   
   return (
     <div className="flex justify-end">
