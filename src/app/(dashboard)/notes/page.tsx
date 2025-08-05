@@ -39,12 +39,8 @@ function NotesPage() {
         </div>
         {isLoadingNotes ? (
           <div className="flex flex-col items-end gap-6 pr-4">
-            {new Array(10).fill("k").map((item) => (
-              <SkeletonLoader
-                key={crypto.randomUUID()}
-                width="150px"
-                height="25px"
-              />
+            {new Array(10).fill("k").map((item, index) => (
+              <SkeletonLoader key={index} width="150px" height="25px" />
             ))}
           </div>
         ) : (

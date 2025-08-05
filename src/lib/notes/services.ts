@@ -20,7 +20,6 @@ export async function createNote(note: CreateNoteType) {
     ...note,
     createdAt: serverTimestamp(),
   });
-  // console.log({ response });
   // return {response};
 }
 

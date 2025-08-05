@@ -19,7 +19,6 @@ import { RecordVoiceNote } from "./RecordVoiceNote"
 //   newNote: NoteType
 // ) => {
 //   const currentDay = dayjs(new Date()).format("DD MMMM YYYY");
-//   console.log({ newNote });
 //   notesGroupByDate
 //     ?.find((group) => group.day === currentDay)
 //     ?.notes.push(newNote);

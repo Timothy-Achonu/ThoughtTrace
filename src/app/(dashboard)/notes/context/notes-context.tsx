@@ -41,7 +41,6 @@ export const groupNotesByDate = (notes: NoteType[]) => {
   notes.forEach((note) => {
     const createdAt = note.createdAt || todayDate;
     const currentDay = getFormattedDate(createdAt as Timestamp).day;
-    // console.log({NcurrentDate: getFormattedDate(todayDate).day, })
     if (!groupMap.has(currentDay)) {
       groupMap.set(currentDay, []);
     }

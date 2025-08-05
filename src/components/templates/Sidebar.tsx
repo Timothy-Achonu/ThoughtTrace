@@ -47,7 +47,6 @@ function Sidebar() {
             return (  
               <button
                 onClick={() => {
-                  console.log("clicked");
                   toggleSidebar();
                 }}
                 key={link.href}

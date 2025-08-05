@@ -20,7 +20,7 @@ async function layout({ children }: { children: React.ReactNode }) {
   }
   // check project document
   return (
-    <section className="flex flex-col h-screen overflow-hidden">
+    <section className="flex flex-col h-[100dvh] overflow-hidden">
       {/* This mobileNav should be hidden when the sidebar shows on mobile */}
       {/* <MobileNav /> */}
       <div className="flex flex-1 pt-0 XXpt-10">
@@ -30,5 +30,5 @@ async function layout({ children }: { children: React.ReactNode }) {
     </section>
   );
 }
-
+  
 export default layout;  

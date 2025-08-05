@@ -39,10 +39,10 @@ function DashboardLayout({
       // eslint-disable-next-line react-hooks/exhaustive-deps
     });
 
-  return (
+  return (  
     <section
       className={twMerge(
-        `bg-secondary flex-1 md:px-5 px-3 flex flex-col h-screen`,
+        `bg-secondary flex-1 md:px-5 px-3 flex flex-col h-[100dvh]`,
         mainContainerClassName
       )}
     >
