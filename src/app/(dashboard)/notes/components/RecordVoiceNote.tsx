@@ -4,10 +4,6 @@ import React from "react";
 import { useAudioRecorder } from "../hooks";
 import { Button } from "@/components";
 import { MdKeyboardVoice } from "react-icons/md";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { createNote } from "@/lib";
-import { useSession } from "next-auth/react";
-import { Session } from "next-auth";
 import { CiTrash } from "react-icons/ci";
 import { IoSend } from "react-icons/io5";
 

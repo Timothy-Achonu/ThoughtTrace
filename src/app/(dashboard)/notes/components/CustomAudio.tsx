@@ -2,15 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause } from "lucide-react";
+import { twMerge } from "tailwind-merge";
+import { cn } from "@/utils";
 
 interface AudioWaveformProps {
   audioUrl: string;
   timestamp?: number;
+  canPlayAudio: boolean;
 }
 
 export function AudioWaveform({
   audioUrl,
   timestamp = 100,
+  canPlayAudio,
 }: AudioWaveformProps) {
   const waveformRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -19,6 +23,7 @@ export function AudioWaveform({
   const [audioDuration, setAudioDuration] = useState(13);
   const [waveformData, setWaveformData] = useState<number[]>([]);
   const [objectUrl, setObjectUrl] = useState<string>("");
+
 
   // Convert base64 to blob and create object URL
   useEffect(() => {
@@ -123,7 +128,8 @@ export function AudioWaveform({
     };
 
     const onTimeUpdate = () => {
-      setCurrentTime(audio.currentTime)};
+      setCurrentTime(audio.currentTime);
+    };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("timeupdate", handleTimeUpdate);
@@ -163,7 +169,6 @@ export function AudioWaveform({
       if (isPlaying) {
         audio.pause();
       } else {
-
         if (readyState >= 2) {
           await audio.play();
         } else {
@@ -207,7 +212,9 @@ export function AudioWaveform({
 
   const progress =
     audioDuration > 0 ? Math.min(1, currentTime / audioDuration) : 0;
-  
+
+  const isAudioDisabled = !objectUrl || !canPlayAudio;
+
   return (
     <div className="flex justify-end">
       <div className="max-w-xs lg:max-w-md rounded-lg  shadow-sm">
@@ -217,8 +224,8 @@ export function AudioWaveform({
           {/* Play/Pause Button */}
           <button
             onClick={handlePlayPause}
-            className="w-10 h-10 rounded-full bg-primary-testimonials hover:bg-[#20BC5A] text-white p-0 flex-shrink-0 flex justify-center items-center"
-            disabled={!objectUrl}
+            className="w-10 h-10 rounded-full bg-primary-testimonials hover:bg-[#20BC5A] disabled:bg-transparent disabled:opacity-40 text-white p-0 flex-shrink-0 flex justify-center items-center disabled:cursor-not-allowed"
+            disabled={isAudioDisabled}
           >
             {isPlaying ? (
               <Pause className="w-5 h-5" />
@@ -231,12 +238,15 @@ export function AudioWaveform({
           <div className="flex-1 min-w-0">
             <div
               ref={waveformRef}
-              className="flex items-end space-x-0.5 h-8 cursor-pointer"
+              className={cn(
+                "flex items-end space-x-0.5 h-8 cursor-pointer",
+                isAudioDisabled && "pointer-events-none opacity-40"
+              )}
               onClick={handleWaveformClick}
+              role="button"
             >
               {waveformData.map((height, index) => {
                 const barProgress = index / (waveformData.length - 1);
-
 
                 // Only active if progress has strictly passed this bar’s point
                 const isActive = barProgress < progress;
