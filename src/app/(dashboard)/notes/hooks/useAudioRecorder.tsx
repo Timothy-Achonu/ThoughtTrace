@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { createNote, NotesGroupedByDateType, NoteType } from "@/lib";
 import { useSession } from "next-auth/react";
@@ -42,7 +42,7 @@ const useAudioRecorder = () => {
   const shouldSaveRef = useRef<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { data: session } = useSession();
-  const { setNotes, stateNotes } = useNotesContext();
+  const { setNotes } = useNotesContext();
 
   const startRecording = async () => {
     try {
@@ -74,7 +74,6 @@ const useAudioRecorder = () => {
           setRecordingTime(0);
           return;
         }
-
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/webm",
         });

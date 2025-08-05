@@ -35,7 +35,7 @@ function NotesPage() {
       >
         {/* <div className="flex-1"> */}
         <div className="max-w-[MIN(340px,70vw)] mx-auto text-clip font-semibold font-sans text-center text-xs mb-9">
-          <p>This is the begining of a conversation with yourself....</p>
+          <p>This is the beginning of a conversation with yourself....</p>
         </div>
         {isLoadingNotes ? (
           <div className="flex flex-col items-end gap-6 pr-4">
@@ -67,6 +67,7 @@ function NotesPage() {
                               <div className="flex-1 min-w-[12rem]">
                                 <AudioWaveform
                                   audioUrl={note.downloadURL as string}
+                                  canPlayAudio={Boolean(note.createdAt)}
                                 />
                                 {/* <audio className="max-w-[MIN(340px,60vw)]" src={note.downloadURL} controls></audio> */}
                               </div>
