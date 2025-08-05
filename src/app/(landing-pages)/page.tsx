@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 
 async function HomePage() {
   const session = await getServerSession(options)
-  console.log(session)
   const data = await handleGetDocs();
 
   return (

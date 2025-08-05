@@ -57,7 +57,6 @@ export function AudioWaveform({
     // Cleanup function to revoke object URL
     return () => {
       if (url && url.startsWith("blob:")) {
-        console.log("url is revoked");
         URL.revokeObjectURL(url);
       }
     };
@@ -69,7 +68,6 @@ export function AudioWaveform({
       const bars = 40;
       // Use audioUrl as seed for consistent waveform
       const audioSplit = audioUrl.split("");
-      console.log({ audioSplit });
       const seed = audioSplit.reduce(
         (acc, char) => acc + char.charCodeAt(0),
         0
@@ -101,7 +99,6 @@ export function AudioWaveform({
     };
 
     const handlePlay = () => {
-      console.log("tried to play");
       setIsPlaying(true);
     };
     const handlePause = () => setIsPlaying(false);
@@ -126,7 +123,6 @@ export function AudioWaveform({
     };
 
     const onTimeUpdate = () => {
-      console.log('updating time')
       setCurrentTime(audio.currentTime)};
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -159,10 +155,8 @@ export function AudioWaveform({
 
   const handlePlayPause = async () => {
     const audio = audioRef.current;
-    console.log({ audio });
     if (!audio || !objectUrl) return;
 
-    console.log({ isPlaying, objectUrl });
     const readyState = audio.readyState;
 
     try {
@@ -243,7 +237,6 @@ export function AudioWaveform({
               {waveformData.map((height, index) => {
                 const barProgress = index / (waveformData.length - 1);
 
-                // console.log({barProgress})
 
                 // Only active if progress has strictly passed this bar’s point
                 const isActive = barProgress < progress;

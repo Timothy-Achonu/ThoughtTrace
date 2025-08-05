@@ -67,8 +67,6 @@ export const options: NextAuthOptions = {
           credentials.email,
           credentials.password
         );
-        console.log(res);
-        console.log(error);
         if (res) {
           return res;
         } else {
@@ -100,10 +98,8 @@ export const options: NextAuthOptions = {
     async session({ session, token, user }) {
       // const { user: userData } = token as { user: any };
       // session.accessToken = token.accessToken as string;
-      // console.log(token)
       session.user = { email: token.email, id: token.sub };
 
-      // console.log("SESSION::: ", session);
       return session;
     },
   },

@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html className={``} lang="en">
       <body
-        className={`${OpenSan.className} ${raleway.variable} bg-primary-main text-neutral-main h-screen overflow-hidden`}
+        className={`${OpenSan.className} ${raleway.variable} bg-secondary text-neutral-main h-[100dvh] overflow-hidden`}
       >
         <AuthProvider>{children}</AuthProvider>
         <Toaster />

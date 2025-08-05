@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/signin",
+        permanent: true,
+      },
+    ];
+  },
+
   webpack(config) {
     // Find the existing rule for SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
