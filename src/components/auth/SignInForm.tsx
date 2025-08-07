@@ -8,7 +8,6 @@ import { useFormik } from "formik";
 import { signInValidationSchema } from "../../lib/auth/schemas";
 import { Input } from "../atoms/Input";
 import { SubmitButton } from "../atoms/SubmitButton";
-import Icon from "@ant-design/icons";
 import { GoogleIcon } from "@/assets";
 //import GoogleIcon from "@/assets/icons/google-icon.svg";
 

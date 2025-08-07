@@ -3,10 +3,10 @@ rules_version = '2';
 service cloud.firestore {
    match /databases/{database}/documents {
 
-    // Allow read access to the "notes" collection only for everyone
-    match /notes/{note} {
+    // Allow read access to the "thoughts" collection only for everyone
+    match /thoughts/{thought} {
       allow read: if true;
-      // Allow create operations on the "notes" collection only for everyone
+      // Allow create operations on the "thoughts" collection only for everyone
       allow create: if true;
     }
 

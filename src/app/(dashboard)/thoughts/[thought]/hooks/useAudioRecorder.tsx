@@ -1,33 +1,33 @@
 import { useState, useRef } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { createNote, NotesGroupedByDateType, NoteType } from "@/lib";
+import { createMessage, MessagesGroupedByDateType, MessageType } from "@/lib";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import dayjs from "dayjs";
-import { useNotesContext } from "../context";
+import { useMessagesContext } from "../context";
 import { formatSecondsToMMSS } from "@/utils";
   
 const arrangeNotes = (
-  notesGroupByDate: NotesGroupedByDateType[] | null,
-  newNote: NoteType
+  messagesGroupByDate: MessagesGroupedByDateType[] | null,
+  newMessage: MessageType
 ) => {
   const today = dayjs().format("DD MMMM YYYY");
-  const existingGroup = notesGroupByDate?.find((group) => group.day === today);
+  const existingGroup = messagesGroupByDate?.find((group) => group.day === today);
   if (existingGroup) {
     return (
-      notesGroupByDate?.map((group) =>
+      messagesGroupByDate?.map((group) =>
         group.day === today
           ? {
               ...group,
-              notes: [...group.notes, newNote],
+              messages: [...group.messages, newMessage],
             }
           : group
       ) || null
     );
   } else {
-    return notesGroupByDate
-      ? [...notesGroupByDate, { day: today, notes: [newNote] }]
-      : notesGroupByDate;
+    return messagesGroupByDate
+      ? [...messagesGroupByDate, { day: today, messages: [newMessage] }]
+      : messagesGroupByDate;
   }
 };
 
@@ -42,7 +42,7 @@ const useAudioRecorder = () => {
   const shouldSaveRef = useRef<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { data: session } = useSession();
-  const { setNotes } = useNotesContext();
+  const { setMessages } = useMessagesContext();
 
   const startRecording = async () => {
     try {
@@ -79,12 +79,13 @@ const useAudioRecorder = () => {
         });
         setAudioBlob(audioBlob);
         const url = URL.createObjectURL(audioBlob);
-        const newNote = {
+        const userId =  (session as Session).user.id as string
+        const newMessage = {
           downloadURL: url,
-          user_id: (session as Session).user.id as string,
+          user_id: userId,
         };
         setAudioURL(url);
-        setNotes((prev) => arrangeNotes(prev, newNote));
+        setMessages((prev) => arrangeNotes(prev, newMessage));
 
         const uploadAudioAndCreateNote = async () => {
           try {
@@ -93,8 +94,8 @@ const useAudioRecorder = () => {
             const storageRef = ref(storage, uniqueFileName);
             const snapshot = await uploadBytes(storageRef, audioBlob);
             const downloadURL = await getDownloadURL(snapshot.ref);
-            newNote.downloadURL = downloadURL;
-            createNote(newNote);
+            newMessage.downloadURL = downloadURL;
+            createMessage(newMessage, userId);
           } catch (error) {
             console.error("Error uploading audio and creating note:", error);
           }

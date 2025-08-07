@@ -1,14 +1,32 @@
-import { initializeApp, getApps, getApp, } from "firebase/app";
-import { getFirestore, collection, getDocs, addDoc, serverTimestamp, onSnapshot, query, where, Timestamp, orderBy,  } from "firebase/firestore";
+import { initializeApp, getApps, getApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  onSnapshot,
+  query,
+  where,
+  Timestamp,
+  orderBy,
+  updateDoc,
+  doc,
+  setDoc,
+  getDoc,
+  CollectionReference,
+  FieldValue,
+  DocumentReference
+} from "firebase/firestore";
 import {
   getAuth,
   onAuthStateChanged,
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-
 } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { FirestoreMessageDataType, FireStoreThoughtDataType } from "@/lib";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -28,11 +46,37 @@ const db = getFirestore();
 const auth = getAuth();
 const firebaseAuth = getAuth(app);
 
-
 const colRef = collection(db, "todos");
-const notesColRef = collection(db, "notes");
-const functions = getFunctions(app); 
-const getServerTime = httpsCallable<{},{ now: Timestamp }>(
+const usersColRef = collection(db, "usersColRef");
+const thoughtsColRef = (userId: string) => {
+  return collection(
+    db,
+    "users",
+    userId,
+    "thoughts"
+  ) as CollectionReference<FireStoreThoughtDataType>;
+};
+const thoughtsDocRef = (userId: string, thoughtId: string) => {
+  return doc(
+    db,
+    "users",
+    userId,
+    "thoughts",
+    thoughtId
+  ) as DocumentReference<FireStoreThoughtDataType>;
+};
+const messagesColRef = (userId: string, thoughtId: string) => {
+  return collection(
+    db,
+    "users",
+    userId,
+    "thoughts",
+    thoughtId,
+    "messages"
+  ) as CollectionReference<FirestoreMessageDataType>;
+};
+const functions = getFunctions(app);
+const getServerTime = httpsCallable<{}, { now: Timestamp }>(
   functions,
   "getServerTime"
 );
@@ -48,7 +92,7 @@ export {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   addDoc,
-  notesColRef,
+  usersColRef,
   serverTimestamp,
   onSnapshot,
   query,
@@ -58,5 +102,12 @@ export {
   orderBy,
   functions,
   getServerTime,
+  updateDoc,
+  doc,
+  setDoc,
+  thoughtsColRef,
+  messagesColRef,
+  getDoc,
+  FieldValue,
+  thoughtsDocRef,
 };
-

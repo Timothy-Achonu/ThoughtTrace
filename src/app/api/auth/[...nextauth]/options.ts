@@ -2,12 +2,8 @@ import type { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { signin } from "@/lib/auth/actions";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithCredential,
-} from "firebase/auth";
+import { signin, createUserDocument } from "@/lib/auth";
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { firebaseAuth } from "@/app/firebase/config";
 
 // Some random ideas. I think I kind of get this next-auth, firebase stuff:
@@ -24,7 +20,6 @@ import { firebaseAuth } from "@/app/firebase/config";
 //- and then pass the neccessary credentials, then the sigin function from next-auth call your signin function and then sign the user in normally(I hope you get)
 
 //Hold on! it's like firebase auth automatically handles persistent login too. But the issue is: Would I be able to access the users session in a server component?
-
 
 export const options: NextAuthOptions = {
   pages: {
@@ -68,6 +63,7 @@ export const options: NextAuthOptions = {
           credentials.password
         );
         if (res) {
+          createUserDocument({ email: res.email, id: res.id });
           return res;
         } else {
           return null;
@@ -80,13 +76,21 @@ export const options: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) token.id = user.id;
+
       return { ...token, ...user };
     },
-    async signIn({ user, account, profile }) {
+    async signIn({ account, user }) {
       if (account?.provider === "google") {
         try {
           const credential = GoogleAuthProvider.credential(account.id_token);
-          await signInWithCredential(firebaseAuth, credential);
+          console.log({credential})
+          const res = await signInWithCredential(firebaseAuth, credential);
+
+          createUserDocument({ email: res.user.email, id: res.user.uid });
+
+          //overide the user id gotten from the Google auth with the user id from firebase login 
+          user.id = res.user.uid;
+
           return true;
         } catch (error) {
           return false;
@@ -95,9 +99,7 @@ export const options: NextAuthOptions = {
       return true;
     },
 
-    async session({ session, token, user }) {
-      // const { user: userData } = token as { user: any };
-      // session.accessToken = token.accessToken as string;
+    async session({ session, token }) {
       session.user = { email: token.email, id: token.sub };
 
       return session;

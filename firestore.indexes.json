@@ -1,7 +1,7 @@
 {
   "indexes": [
     {
-      "collectionGroup": "notes",
+      "collectionGroup": "thoughts",
       "queryScope": "COLLECTION_GROUP",
       "fields": [
         {
