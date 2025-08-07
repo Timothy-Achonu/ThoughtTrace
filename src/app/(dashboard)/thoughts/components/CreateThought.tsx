@@ -5,10 +5,12 @@ import { Button, Input } from "@/components";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { createThought } from "@/lib";
+import { useRouter } from "next/navigation";
 
 const CreateThought = () => {
   const { data: session } = useSession();
   const [inputValue, setInputValue] = useState("");
+  const router = useRouter()
 
 
   async function onSubmit(e: FormEvent) {
@@ -25,10 +27,12 @@ const CreateThought = () => {
     // });
     // });
     const response = await createThought(newThought, userId);
+    router.push(`/thoughts/${response.id}`)
+
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 self-center">
       <Input
         type="text"
         placeholder="Enter thought title"
