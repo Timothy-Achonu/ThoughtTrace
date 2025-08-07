@@ -6,13 +6,16 @@ import { Session } from "next-auth";
 import dayjs from "dayjs";
 import { useMessagesContext } from "../context";
 import { formatSecondsToMMSS } from "@/utils";
-  
+import { useParams } from "next/navigation";
+
 const arrangeNotes = (
   messagesGroupByDate: MessagesGroupedByDateType[] | null,
   newMessage: MessageType
 ) => {
   const today = dayjs().format("DD MMMM YYYY");
-  const existingGroup = messagesGroupByDate?.find((group) => group.day === today);
+  const existingGroup = messagesGroupByDate?.find(
+    (group) => group.day === today
+  );
   if (existingGroup) {
     return (
       messagesGroupByDate?.map((group) =>
@@ -43,7 +46,8 @@ const useAudioRecorder = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { data: session } = useSession();
   const { setMessages } = useMessagesContext();
-
+  const params = useParams();
+  const { thought: thoughtId } = params;
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -79,8 +83,9 @@ const useAudioRecorder = () => {
         });
         setAudioBlob(audioBlob);
         const url = URL.createObjectURL(audioBlob);
-        const userId =  (session as Session).user.id as string
+        const userId = (session as Session).user.id as string;
         const newMessage = {
+          id: '', //leave as empty string so that id value is falsy
           downloadURL: url,
           user_id: userId,
         };
@@ -95,7 +100,7 @@ const useAudioRecorder = () => {
             const snapshot = await uploadBytes(storageRef, audioBlob);
             const downloadURL = await getDownloadURL(snapshot.ref);
             newMessage.downloadURL = downloadURL;
-            createMessage(newMessage, userId);
+            createMessage(userId, thoughtId as string, newMessage);
           } catch (error) {
             console.error("Error uploading audio and creating note:", error);
           }

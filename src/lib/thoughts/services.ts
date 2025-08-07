@@ -23,7 +23,6 @@ export async function createThought(
 export async function createMessage(
   userId: string,
   thoughtId: string,
-
   message: CreateMessageType
 ) {
   const response = await addDocWrapper<CreateMessageType>(messagesColRef(userId, thoughtId), {
