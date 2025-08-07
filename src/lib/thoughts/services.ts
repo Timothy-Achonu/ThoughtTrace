@@ -13,10 +13,12 @@ export async function createThought(
   thought: CreateThoughtType,
   userId: string
 ) {
-  await addDocWrapper<CreateThoughtType>(thoughtsColRef(userId), {
+ const res = await addDocWrapper<CreateThoughtType>(thoughtsColRef(userId), {
     ...thought,
     createdAt: serverTimestamp(),
   });
+
+  return res;
 }
 
 //create message inside a thought

@@ -1,13 +1,14 @@
 import { CreateThought } from "./components/CreateThought";
+import DashboardLayout from "@/components/templates/DashboardLayout";
 
 const Page = () => {
   return (
-    <div className="min-h-screen flex justify-center items-center w-full">
-
-      <CreateThought />
-    </div>
+    <DashboardLayout header="Create Thought" addHeaderArrowBack={true}>
+      <div className="h-full justify-center flex items-center">
+        <CreateThought />
+      </div>
+    </DashboardLayout>
   );
 };
 
 export default Page;
-  
