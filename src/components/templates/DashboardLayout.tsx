@@ -55,7 +55,7 @@ function DashboardLayout({
         >
           {typeof header == "string" ? (
             <div className="flex items-center gap-4">
-              {addHeaderArrowBack && <ArrowBack />}
+              {addHeaderArrowBack && <ArrowBackComponent />}
               <div>
                 <p className="text-2xl text-neutral-main font-bold capitalize">
                   {header}
@@ -70,7 +70,7 @@ function DashboardLayout({
           ) : (
             <div className="flex items-center gap-4">
               {" "}
-              {addHeaderArrowBack && <ArrowBack />}
+              {addHeaderArrowBack && <ArrowBackComponent />}
               {header}
             </div>
           )}
@@ -107,7 +107,7 @@ function DashboardLayout({
 
 export default DashboardLayout;
 
-const ArrowBack = () => {
+const ArrowBackComponent = () => {
   const { toggleSidebar } = useToggleSidebar();
 
   return (

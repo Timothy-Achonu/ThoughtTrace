@@ -1,4 +1,3 @@
-export * from './atoms/Heading';
-export * from './atoms/Button';
+export * from './atoms';
 export * from './templates/Navbar';
  

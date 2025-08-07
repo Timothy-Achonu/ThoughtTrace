@@ -2,18 +2,18 @@
 
 import { Input } from "@/components/atoms/Input";
 import { IoSend } from "react-icons/io5";
-import { MdKeyboardVoice } from "react-icons/md";
 import { FormEvent, useState } from "react";
-import { createNote } from "@/lib/notes";
+import { createMessage } from "@/lib/thoughts";
 import { useSession } from "next-auth/react";
-import { SubmitButton } from "../../../../components/atoms/SubmitButton";
+import { SubmitButton } from "@/components/atoms/SubmitButton";
 import { Session } from "next-auth";
-import { useNotesContext } from "../context";
 import { flushSync } from "react-dom";
+import { useMessagesContext } from "../context";
 import { Button } from "@/components";
 import dayjs from "dayjs";
-import { NotesGroupedByDateType, NoteType } from "@/lib";
-import { RecordVoiceNote } from "./RecordVoiceNote"
+import { MessagesGroupedByDateType, MessageType } from "@/lib";
+import { RecordVoiceNote } from "./RecordVoiceNote";
+import { useParams } from "next/navigation";
 // const arrangeNotes = (
 //   notesGroupByDate: NotesGroupedByDateType[] | null,
 //   newNote: NoteType
@@ -25,17 +25,18 @@ import { RecordVoiceNote } from "./RecordVoiceNote"
 //   return notesGroupByDate;
 // };
 
-
-function NoteCreator() {
+function MessageCreator() {
   const { data: session } = useSession();
-  const { setNotes, stateNotes } = useNotesContext();
-
+  const { setMessages, stateMessages } = useMessagesContext();
+  const userId = session?.user.id ;
+  const params = useParams();
+  const { thought } = params;
   const [inputValue, setInputValue] = useState("");
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    const newNote = {
+    const newMessage = {
       body: inputValue,
-      user_id: (session as Session).user.id as string,
+      user_id: userId,
     };
 
     setInputValue("");
@@ -43,7 +44,12 @@ function NoteCreator() {
     //   return arrangeNotes(prev, newNote);
     // });
     // });
-    const response = await createNote(newNote);
+
+    const response = await createMessage(
+      userId as string,
+      thought as string,
+      newMessage
+    );
   }
   return (
     <form
@@ -69,8 +75,8 @@ function NoteCreator() {
       ) : (
         <RecordVoiceNote />
       )}
-    </form> 
+    </form>
   );
 }
 
-export default NoteCreator;
+export default MessageCreator;
