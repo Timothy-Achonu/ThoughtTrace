@@ -1,12 +1,9 @@
-import { getDocs, onSnapshot } from "@/app/firebase/config";
-import { CreateMessageType, CreateThoughtType, FirestoreMessageDataType, FireStoreThoughtDataType } from "./types";
+import { CreateMessageType, CreateThoughtType, } from "./types";
 import {
   serverTimestamp,
-  addDoc,
   thoughtsColRef,
   messagesColRef,
 } from "@/app/firebase/config";
-import { ThoughtType } from "./types";
 import { addDocWrapper } from "../common";
 
 export async function createThought(
@@ -31,4 +28,5 @@ export async function createMessage(
     ...message,
     createdAt: serverTimestamp(),
   });
+  return response;
 }

@@ -1,5 +1,5 @@
 "use client";
-import { signIn, SignInOptions, getProviders } from "next-auth/react";
+import { signIn, SignInOptions } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { Button } from "@/components/atoms/Button";
@@ -9,7 +9,6 @@ import { signInValidationSchema } from "../../lib/auth/schemas";
 import { Input } from "../atoms/Input";
 import { SubmitButton } from "../atoms/SubmitButton";
 import { GoogleIcon } from "@/assets";
-//import GoogleIcon from "@/assets/icons/google-icon.svg";
 
 function SignInForm() {
   const searchParams = useSearchParams();
@@ -73,7 +72,8 @@ function SignInForm() {
           <Button
             type="button"
             intent={"outline"}
-            onClick={() => signIn("google")}
+            onClick={() => {
+              signIn("google")}}
             className="mx-auto"
           >
             <GoogleIcon /> <span> Sign In with Google </span>

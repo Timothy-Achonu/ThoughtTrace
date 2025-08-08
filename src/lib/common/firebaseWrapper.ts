@@ -2,7 +2,6 @@
 
 import {
   onSnapshot,
-  Query,
   DocumentReference,
   Unsubscribe,
   DocumentData,
@@ -11,14 +10,10 @@ import {
   DocumentSnapshot,
   addDoc,
   getDoc,
-} from "firebase/firestore";
+} from "@/app/firebase/config";
 import { signOut as nextAuthSignOut } from "next-auth/react";
-// import { auth } from "@/firebase"; // your Firebase auth instance
 import { signoutFirebase } from "@/lib";
 
-//CollectionReference<FireStoreThoughtDataType>
-
-//DocumentReference<any, DocumentData>
 type SnapshotSource<T> = CollectionReference<T>;
 
 export const onSnapShotCollectionWrapper = <T>(
@@ -26,22 +21,7 @@ export const onSnapShotCollectionWrapper = <T>(
   onNext: (snapshot: QuerySnapshot<T>) => void,
   onError?: (error: any) => void
 ): Unsubscribe => {
-  return onSnapshot(source, onNext, (error) => {
-    console.error("Firestore onSnapshot error:", error);
-
-    if (
-      error.code === "permission-denied" ||
-      error.code === "unauthenticated"
-    ) {
-      console.warn("User's session has expired. Signing out...");
-
-      // Optional: show a toast or notification before logging out
-      handleAuthError();
-    }
-
-    // Forward the error to the caller if they want it
-    if (onError) onError(error);
-  });
+  return onSnapshot(source, onNext, (error) => handleError(error, onError));
 };
 
 export const onSnapShotDocumentWrapper = <T>(
@@ -49,66 +29,46 @@ export const onSnapShotDocumentWrapper = <T>(
   onNext: (snapshot: DocumentSnapshot<T>) => void,
   onError?: (error: any) => void
 ): Unsubscribe => {
-  return onSnapshot(source, onNext, (error) => {
-    console.error("Firestore onSnapshot error:", error);
-
-    if (
-      error.code === "permission-denied" ||
-      error.code === "unauthenticated"
-    ) {
-      console.warn("User's session has expired. Signing out...");
-
-      // Optional: show a toast or notification before logging out
-      handleAuthError();
-    }
-
-    // Forward the error to the caller if they want it
-    if (onError) onError(error);
-  });
+  return onSnapshot(source, onNext, (error) => handleError(error, onError));
 };
 
 // Generic wrapper for addDoc
 export const addDocWrapper = async <T extends DocumentData>(
   collectionRef: CollectionReference<T>,
   data: T
-): Promise<ReturnType<typeof addDoc>> => {
+): Promise<ReturnType<typeof addDoc> | undefined> => {
   try {
     return await addDoc(collectionRef, data);
   } catch (error: any) {
-    console.error("Firestore addDoc error:", error);
+       handleError(error);
 
-    if (
-      error.code === "permission-denied" ||
-      error.code === "unauthenticated"
-    ) {
-      console.warn("User's session has expired. Signing out...");
-      await handleAuthError();
-    }
-
-    throw error; // rethrow so the caller knows something went wrong
   }
 };
 
 // Generic wrapper for getDoc
 export const getDocWrapper = async <T extends DocumentData>(
   docRef: DocumentReference<T>
-): Promise<DocumentSnapshot<T>> => {
+): Promise<DocumentSnapshot<T> | undefined> => {
   try {
     const docSnap = await getDoc(docRef);
     return docSnap;
   } catch (error: any) {
-    console.error("Firestore getDoc error:", error);
-
-    if (
-      error.code === "permission-denied" ||
-      error.code === "unauthenticated"
-    ) {
-      console.warn("User's session has expired. Signing out...");
-      await handleAuthError();
-    }
-
-    throw error;
+    handleError(error);
   }
+};
+
+const handleError = (error: any, onError?: (error: any) => void) => {
+  console.error("Firestore onSnapshot error:", error);
+
+  if (error.code === "permission-denied" || error.code === "unauthenticated") {
+    console.warn("User's session has expired. Signing out...");
+
+    // Optional: show a toast or notification before logging out
+    handleAuthError();
+  }
+
+  // Forward the error to the caller if they want it
+  if (onError) onError(error);
 };
 
 const handleAuthError = async () => {

@@ -21,7 +21,7 @@ interface Props
 const antIcon = <LoadingOutlined style={{ fontSize: 16 }} spin />;
 
 export function SubmitButton({ children, className, shouldUsePending = true,  ...props }: Props) {
-  const { pending, data } = useFormStatus();
+  const { pending, } = useFormStatus();
   const isPending = shouldUsePending && pending;
 
   return (

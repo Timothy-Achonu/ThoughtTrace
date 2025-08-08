@@ -1,12 +1,11 @@
 "use client";
 import DashboardLayout from "@/components/templates/DashboardLayout";
-import { MessagesGroupedByDateType, MessageType } from "@/lib/thoughts";
+import { MessagesGroupedByDateType } from "@/lib/thoughts";
 import MessageCreator from "./components/MesssageCreator";
 import { SkeletonLoader } from "@/components/ui";
 import { getFormattedDate } from "@/utils";
 import { ClockIcon } from "@/assets";
 import { useCallback, useEffect, useRef } from "react";
-import { CustomAudioPlayer } from "./components";
 import { AudioWaveform } from "./components";
 import { useMessagesContext } from "./context";
 
@@ -22,10 +21,14 @@ function NotesPage() {
       });
     }, 100);
   }, []);
+
+
   useEffect(() => {
     scrollToTableTop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  },[]);
+
+
   return (
     <>
       <DashboardLayout
@@ -39,7 +42,7 @@ function NotesPage() {
         </div>
         {isLoadingMessages ? (
           <div className="flex flex-col items-end gap-6 pr-4">
-            {new Array(10).fill("k").map((item, index) => (
+            {new Array(10).fill("k").map((_, index) => (
               <SkeletonLoader key={index} width="150px" height="25px" />
             ))}
           </div>
@@ -62,7 +65,7 @@ function NotesPage() {
                             className="bg-primary-main rounded-md px-2 py-1 relative flex gap-2 max-w-[24rem]"
                           >
                             {messages?.body ? (
-                              <p className=""> {messages.body} </p>
+                              <p className="break-all "> {messages.body} </p>
                             ) : (
                               <div className="flex-1 min-w-[12rem]">
                                 <AudioWaveform
