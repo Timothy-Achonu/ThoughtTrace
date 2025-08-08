@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { permanentRedirect } from "next/navigation";
 import { options } from "../api/auth/[...nextauth]/options";
 import Sidebar from "@/components/templates/Sidebar";
-import MobileNav from "@/components/templates/MobileNav";
+// import MobileNav from "@/components/templates/MobileNav";
 
 async function layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(options);
