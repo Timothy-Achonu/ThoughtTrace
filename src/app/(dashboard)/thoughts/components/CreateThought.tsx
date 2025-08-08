@@ -27,7 +27,7 @@ const CreateThought = () => {
     // });
     // });
     const response = await createThought(newThought, userId);
-    router.push(`/thoughts/${response.id}`)
+    router.push(`/thoughts/${response?.id}`)
 
   }
 
