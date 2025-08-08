@@ -69,7 +69,7 @@ function SignUpForm() {
         }
       }
     } catch (error: any) {
-      console.log(error);
+      toast.error(`Failed to login`);
     }
   }
   return (
@@ -87,11 +87,11 @@ function SignUpForm() {
           >
             <GoogleIcon /> <span> Sign Up With Google </span>
           </Button>
-          <p className="py-6 mx-auto w-fit">OR</p>  
+          <p className="py-6 mx-auto w-fit">OR</p>
           <div className="mb-4 flex flex-col">
             <Input
               name="email"
-              type="email"  
+              type="email"
               id="email"
               label="Email Address"
               onChange={handleChange}
