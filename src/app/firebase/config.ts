@@ -14,9 +14,13 @@ import {
   doc,
   setDoc,
   getDoc,
-  CollectionReference,
   FieldValue,
-  DocumentReference
+  DocumentReference,
+  Unsubscribe,
+  DocumentData,
+  CollectionReference,
+  QuerySnapshot,
+  DocumentSnapshot,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -110,4 +114,9 @@ export {
   getDoc,
   FieldValue,
   thoughtsDocRef,
+  DocumentReference,
+  CollectionReference,
+  QuerySnapshot,
+  DocumentSnapshot,
 };
+export type { Unsubscribe, DocumentData };

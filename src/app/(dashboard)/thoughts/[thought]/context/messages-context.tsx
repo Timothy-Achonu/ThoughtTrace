@@ -15,13 +15,11 @@ import {
 } from "@/lib/thoughts";
 import {
   messagesColRef,
-  onSnapshot,
   thoughtsDocRef,
 } from "@/app/firebase/config";
 import { useSession } from "next-auth/react";
 import { getFormattedDate } from "@/utils";
 import { Timestamp } from "@/app/firebase/config";
-import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 import {
   onSnapShotCollectionWrapper,
@@ -96,18 +94,14 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
         });
         setIsLoadingMessages(false);
         const groups = groupMessagesByDate(messages);
-        const lastGroup = groups[groups.length - 1];
+        // const lastGroup = groups[groups.length - 1];
         // if (lastGroup?.messages[lastGroup.messages.length - 1].createdAt) {
         setMessages(groups);
         // }
       }
     );
 
-    // const unsubThoughtDoc = onSnapshot(thoughtsDocRef(userId, thought as string), (snapshot) => {
-    //   const thought =  {...snapshot.data(), id: snapshot.id}
-    //   setCurrentThought(thought)
 
-    // })
     const unsubThoughtDoc = onSnapShotDocumentWrapper<FireStoreThoughtDataType>(
       thoughtsDocRef(userId, thought as string),
       (snapshot) => {

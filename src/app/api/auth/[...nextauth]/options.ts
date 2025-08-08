@@ -48,7 +48,7 @@ export const options: NextAuthOptions = {
           placeholder: "***",
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials,) {
         if (
           !credentials ||
           typeof credentials == "undefined" ||
@@ -58,7 +58,7 @@ export const options: NextAuthOptions = {
           return null;
         }
 
-        const { res, error } = await signin(
+        const { res,  } = await signin(
           credentials.email,
           credentials.password
         );
