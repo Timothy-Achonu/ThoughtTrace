@@ -5,13 +5,8 @@ import { IoSend } from "react-icons/io5";
 import { FormEvent, useState } from "react";
 import { createMessage } from "@/lib/thoughts";
 import { useSession } from "next-auth/react";
-import { SubmitButton } from "@/components/atoms/SubmitButton";
-import { Session } from "next-auth";
-import { flushSync } from "react-dom";
-import { useMessagesContext } from "../context";
+// import { useMessagesContext } from "../context";
 import { Button } from "@/components";
-import dayjs from "dayjs";
-import { MessagesGroupedByDateType, MessageType } from "@/lib";
 import { RecordVoiceNote } from "./RecordVoiceNote";
 import { useParams } from "next/navigation";
 // const arrangeNotes = (
@@ -27,7 +22,7 @@ import { useParams } from "next/navigation";
 
 function MessageCreator() {
   const { data: session } = useSession();
-  const { setMessages, stateMessages } = useMessagesContext();
+  // const { setMessages, stateMessages } = useMessagesContext();
   const userId = session?.user.id ;
   const params = useParams();
   const { thought } = params;
@@ -45,7 +40,7 @@ function MessageCreator() {
     // });
     // });
 
-    const response = await createMessage(
+    await createMessage(
       userId as string,
       thought as string,
       newMessage

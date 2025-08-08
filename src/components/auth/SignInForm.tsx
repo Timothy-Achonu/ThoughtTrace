@@ -9,7 +9,6 @@ import { signInValidationSchema } from "../../lib/auth/schemas";
 import { Input } from "../atoms/Input";
 import { SubmitButton } from "../atoms/SubmitButton";
 import { GoogleIcon } from "@/assets";
-//import GoogleIcon from "@/assets/icons/google-icon.svg";
 
 function SignInForm() {
   const searchParams = useSearchParams();

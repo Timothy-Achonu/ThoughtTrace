@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause } from "lucide-react";
-import { twMerge } from "tailwind-merge";
 import { cn } from "@/utils";
 
 interface AudioWaveformProps {
@@ -13,14 +12,14 @@ interface AudioWaveformProps {
 
 export function AudioWaveform({
   audioUrl,
-  timestamp = 100,
+  // timestamp = 100,
   canPlayAudio,
 }: AudioWaveformProps) {
   const waveformRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [audioDuration, setAudioDuration] = useState(13);
+  const [audioDuration, ] = useState(13);
   const [waveformData, setWaveformData] = useState<number[]>([]);
   const [objectUrl, setObjectUrl] = useState<string>("");
 
@@ -127,9 +126,9 @@ export function AudioWaveform({
       // Audio is ready to play
     };
 
-    const onTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
-    };
+    // const onTimeUpdate = () => {
+    //   setCurrentTime(audio.currentTime);
+    // };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("timeupdate", handleTimeUpdate);
