@@ -10,6 +10,8 @@ import { Input } from "../atoms/Input";
 import { SubmitButton } from "../atoms/SubmitButton";
 import { Button } from "..";
 import { GoogleIcon } from "@/assets";
+
+
 function SignUpForm() {
   const { handleBlur, handleSubmit, handleChange, values, touched, errors } =
     useFormik({
