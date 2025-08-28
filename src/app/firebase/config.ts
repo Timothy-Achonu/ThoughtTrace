@@ -21,6 +21,7 @@ import {
   CollectionReference,
   QuerySnapshot,
   DocumentSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   getAuth,

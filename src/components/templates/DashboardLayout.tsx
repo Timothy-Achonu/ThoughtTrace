@@ -1,7 +1,6 @@
 "use client";
 import { ClassNameValue, twMerge } from "tailwind-merge";
-import { MdArrowBack } from "react-icons/md";
-import useToggleSidebar from "@/store/toggleSidebar";
+import { ArrowBack } from "../atoms";
 import { useCallback, useEffect, useRef } from "react";
 
 type DashboardLayoutPropsType = {
@@ -55,7 +54,7 @@ function DashboardLayout({
         >
           {typeof header == "string" ? (
             <div className="flex items-center gap-4">
-              {addHeaderArrowBack && <ArrowBackComponent />}
+              {addHeaderArrowBack && <ArrowBack />}
               <div>
                 <p className="text-2xl text-neutral-main font-bold capitalize">
                   {header}
@@ -70,7 +69,7 @@ function DashboardLayout({
           ) : (
             <div className="flex items-center gap-4">
               {" "}
-              {addHeaderArrowBack && <ArrowBackComponent />}
+              {addHeaderArrowBack && <ArrowBack />}
               {header}
             </div>
           )}
@@ -107,17 +106,3 @@ function DashboardLayout({
 
 export default DashboardLayout;
 
-const ArrowBackComponent = () => {
-  const { toggleSidebar } = useToggleSidebar();
-
-  return (
-    <button
-      type="button"
-      className="flex sm:hidden text-white"
-      onClick={() => toggleSidebar()}
-    >
-      {" "}
-      <MdArrowBack />{" "}
-    </button>
-  );
-};

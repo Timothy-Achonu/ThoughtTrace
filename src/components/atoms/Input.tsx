@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { twMerge } from "tailwind-merge";
-
+import { cn } from "@/utils";
 interface IInput
   extends React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
@@ -23,6 +22,7 @@ interface IInputProps extends InputProps {
   labelStyle?: string;
   error?: string;
   touched?: boolean;
+  containerClassName?: string;
 }
 
 export const Input = ({
@@ -31,17 +31,18 @@ export const Input = ({
   labelStyle,
   error,
   className,
+  containerClassName,
   ...props
 }: IInputProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePassword = () => setIsPasswordVisible(!isPasswordVisible);
 
   return (
-    <fieldset className="w-full flex flex-col gap-2">
+    <fieldset className= {cn("w-full flex flex-col gap-2", containerClassName)}>
       {label && (
         <label
           htmlFor={props.name}
-          className={twMerge("flex items-center", labelStyle)}
+          className={cn("flex items-center", labelStyle)}
         >
           {label}
           {props.required && (
@@ -49,14 +50,14 @@ export const Input = ({
           )}
         </label>
       )}
-      <div className="w-full flex flex-col relative justify-center">
+      <div className="w-full flex flex-col relative justify-center ">
         {isTextArea ? (
           <textarea
             {...props}
-            className={twMerge(
+            className={cn(
               `border text-lg py-3 px-4 rounded-[8px] flex-1 w-full  placeholder:font-body ${
                 error
-                  ? "text-error-1 border-error-1"
+                  ? "text-error border-error"
                   : "border-[#CCC] text-[#020202]"
               }`,
               className
@@ -74,12 +75,12 @@ export const Input = ({
                     ? "text"
                     : props.type
                 }`}
-                className={twMerge(
+                className={cn(
                   `border py-3 px-4 text-lg rounded-[8px] flex-1 w-full placeholder:font-body ${
                     props.name === "password" ? "pr-12" : ""
                   } ${
                     error
-                      ? "text-error-1 border-error-1"
+                      ? "text-error border-error"
                       : "border-[#CCC] text-[#020202]"
                   }`,
                   className
@@ -105,7 +106,7 @@ export const Input = ({
       <span
         className={`mt-[2px] ${
           error ? "" : "opacity-0"
-        } text-error-1 max-w-fit break-words text-sm`}
+        } text-error max-w-fit break-words text-sm`}
       >
         {error}
       </span>

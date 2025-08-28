@@ -3,7 +3,7 @@ import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Button } from "@/components/atoms/Button";
 import { useFormStatus } from "react-dom";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/utils";
 interface Props
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -18,7 +18,7 @@ interface Props
   shouldUsePending?: boolean;
 }
 
-const antIcon = <LoadingOutlined style={{ fontSize: 16 }} spin />;
+const antIcon = <LoadingOutlined style={{ fontSize: 16, color: 'white' }} spin />;
 
 export function SubmitButton({ children, className, shouldUsePending = true,  ...props }: Props) {
   const { pending, } = useFormStatus();
@@ -26,17 +26,12 @@ export function SubmitButton({ children, className, shouldUsePending = true,  ..
 
   return (
     <Button
-      intent={isPending ? "outline" : "primary"}
+      intent={"primary"}
       disabled={isPending}
-      outline={isPending}
       type="submit"
       {...props}
       aria-disabled={isPending}
-      className={twMerge(
-        "opacity-100 ",
-       isPending ? "hover:bg-white" : "hover:border-accent-blue",
-        className
-      )}
+      className={className}
     >
       {isPending ? (
         <Spin className="min-w-[42px]" indicator={antIcon} />

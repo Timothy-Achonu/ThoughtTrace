@@ -11,7 +11,6 @@ import { SubmitButton } from "../atoms/SubmitButton";
 import { Button } from "..";
 import { GoogleIcon } from "@/assets";
 
-
 function SignUpForm() {
   const { handleBlur, handleSubmit, handleChange, values, touched, errors } =
     useFormik({
@@ -87,9 +86,13 @@ function SignUpForm() {
             onClick={() => signIn("google")}
             className="mx-auto "
           >
-            <GoogleIcon /> <span> Sign Up With Google </span>
+            <GoogleIcon /> <span> Continue with Google </span>
           </Button>
-          <p className="py-6 mx-auto w-fit">OR</p>
+          <div className="flex items-center gap-2 my-6">
+            <hr className="h-[1px] w-full bg-gray-500/30 " />
+            <p className="">OR</p>
+            <hr className="h-[1px] w-full bg-gray-500 " />
+          </div>{" "}
           <div className="mb-4 flex flex-col">
             <Input
               name="email"
@@ -101,6 +104,7 @@ function SignUpForm() {
               error={touched.email && errors.email ? errors.email : ""}
               value={values.email}
               placeholder="user@example.com"
+              className="dark:bg-white"
             />
 
             <Input
@@ -113,6 +117,7 @@ function SignUpForm() {
               error={touched.password && errors.password ? errors.password : ""}
               value={values.password}
               placeholder="**********"
+              className="dark:bg-white"
             />
             <Input
               name="confirmPassword"
@@ -128,9 +133,12 @@ function SignUpForm() {
               }
               value={values.confirmPassword}
               placeholder="**********"
+              className="dark:bg-white"
             />
           </div>
-          <SubmitButton className="w-full">Sign up</SubmitButton>
+          <SubmitButton className="w-full dark:text-white">
+            Sign up
+          </SubmitButton>
           <Button
             isLink={true}
             href="/signin"
