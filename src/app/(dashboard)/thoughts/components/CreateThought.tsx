@@ -8,14 +8,6 @@ import { createThought } from "@/lib";
 import { useRouter } from "next/navigation";
 import {
   Plus,
-  Search,
-  MessageCircle,
-  Clock,
-  Moon,
-  Sun,
-  Settings,
-  LogOut,
-  BookOpen,
 } from "lucide-react";
 
 const CreateThought = () => {

@@ -2,9 +2,9 @@
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Button } from "@/components/atoms/Button";
-import { useFormStatus } from "react-dom";
-import { cn } from "@/utils";
-interface Props
+import { useFormStatus } from "react-dom"; 
+import { cn } from "@/utils";  
+interface Props  
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement

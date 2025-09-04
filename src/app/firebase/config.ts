@@ -119,5 +119,6 @@ export {
   CollectionReference,
   QuerySnapshot,
   DocumentSnapshot,
+  deleteDoc,
 };
 export type { Unsubscribe, DocumentData };
