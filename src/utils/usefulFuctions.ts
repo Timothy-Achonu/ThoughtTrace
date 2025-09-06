@@ -11,7 +11,6 @@ export const getFormattedDate = (date: Timestamp | string) => {
       fullDate: dayjs(dateObj).format(),
     };
   } else {
-    console.log({date})
     const stringDate = date as string;
     return {
       time: dayjs(stringDate).format("HH:mm"),

@@ -1,8 +1,12 @@
-import { CreateMessageType, CreateThoughtType, } from "./types";
+import { CreateMessageType, CreateThoughtType } from "./types";
 import {
   serverTimestamp,
   thoughtsColRef,
   messagesColRef,
+  batch,
+  doc,
+  increment,
+  thoughtsDocRef,
 } from "@/app/firebase/config";
 import { addDocWrapper } from "../common";
 
@@ -10,7 +14,7 @@ export async function createThought(
   thought: CreateThoughtType,
   userId: string
 ) {
- const res = await addDocWrapper<CreateThoughtType>(thoughtsColRef(userId), {
+  const res = await addDocWrapper<CreateThoughtType>(thoughtsColRef(userId), {
     ...thought,
     createdAt: serverTimestamp(),
   });
@@ -24,9 +28,25 @@ export async function createMessage(
   thoughtId: string,
   message: CreateMessageType
 ) {
-  const response = await addDocWrapper<CreateMessageType>(messagesColRef(userId, thoughtId), {
+
+  const messageDocRef = doc(messagesColRef(userId, thoughtId));
+  const thoughtDocRef = thoughtsDocRef(userId, thoughtId);
+
+  const messageWithTime = {
     ...message,
     createdAt: serverTimestamp(),
+  };
+
+  // Add the new message
+  batch.set(messageDocRef, {
+    ...messageWithTime,
   });
-  return response;
+
+  // Update the parent thought
+  batch.update(thoughtDocRef, {
+    lastMessage: messageWithTime,
+    numberOfMessages: increment(1), // firestore atomic increment
+  });
+
+   await batch.commit();
 }

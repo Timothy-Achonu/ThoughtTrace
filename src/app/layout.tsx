@@ -4,6 +4,7 @@ import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./providers";
+import { QueryProvider } from "@/context";
 
 const OpenSan = Open_Sans({ weight: "400", subsets: ["latin"] });
 export const raleway = Raleway({
@@ -29,7 +30,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            {children}
+            <QueryProvider>{children}</QueryProvider>
           </ThemeProvider>
         </AuthProvider>
         <Toaster />

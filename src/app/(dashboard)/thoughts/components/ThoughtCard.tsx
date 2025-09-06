@@ -10,8 +10,8 @@ import { getFormattedDate } from "@/utils";
 
 export const ThoughtCard = ({ thought }: { thought: ThoughtType }) => {
   const router = useRouter();
-  const lastMessageTime = thought.messages?.pop()?.createdAt;
-  const lastMessage = thought.messages?.pop();
+  const lastMessageTime = thought.lastMessage?.createdAt;
+  const lastMessage = thought.lastMessage;
 
   return (
     <div
@@ -27,7 +27,7 @@ export const ThoughtCard = ({ thought }: { thought: ThoughtType }) => {
             </h3>
             <div className="flex items-center space-x-1 text-xs bg-secondary w-[42px] rounded-[12px] h-[20px] text-black dark:text-white justify-center">
               <MessageCircle className="h-[12px] w-[12px]" />
-              <span>{thought.messages?.length || 0}</span>
+              <span>{thought.numberOfMessages || 0}</span>
             </div>
           </div>  
   
@@ -40,7 +40,7 @@ export const ThoughtCard = ({ thought }: { thought: ThoughtType }) => {
 
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
             {lastMessageTime && (
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-1"> 
                 <Clock className="h-3 w-3" />
                 <span>
                   {formatDistanceToNow(

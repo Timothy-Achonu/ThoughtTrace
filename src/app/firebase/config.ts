@@ -22,6 +22,8 @@ import {
   QuerySnapshot,
   DocumentSnapshot,
   deleteDoc,
+  writeBatch,
+  increment,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -86,6 +88,8 @@ const getServerTime = httpsCallable<{}, { now: Timestamp }>(
   "getServerTime"
 );
 
+const batch = writeBatch(db);
+
 export {
   app,
   auth,
@@ -120,5 +124,8 @@ export {
   QuerySnapshot,
   DocumentSnapshot,
   deleteDoc,
+  writeBatch,
+  batch,
+  increment,
 };
 export type { Unsubscribe, DocumentData };

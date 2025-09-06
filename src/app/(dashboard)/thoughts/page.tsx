@@ -7,17 +7,20 @@ import { thoughtsColRef, query, orderBy } from "@/app/firebase/config";
 import { useSession } from "next-auth/react";
 import { ThoughtCard } from "./components";
 import { SkeletonLoader } from "@/components/ui";
-
+import { useQueryContext } from "@/context";
+import { QUERY_KEYS } from "@/utils";
 const Page = () => {
   const { data: session } = useSession();
   const userId = session?.user.id as string;
-  const [thoughtsRes, setThoughtsRes] = useState<{
-    data: ThoughtType[] | null;
-    isLoading: boolean;
-  }>({ data: null, isLoading: true });
+  const { getQuery, setQuery, } = useQueryContext();
+  const thoughtsRes = getQuery<ThoughtType[]>(QUERY_KEYS.THOUGHTS);
+
+  // const [thoughtsRes, setThoughtsRes] = useState<{
+  //   data: ThoughtType[] | null;
+  //   isLoading: boolean;
+  // }>({ data: null, isLoading: true });
 
   const [searchValue, setSearchValue] = useState("");
-  console.log({ thoughtsRes });
 
   useEffect(() => {
     if (!userId) return;
@@ -38,15 +41,20 @@ const Page = () => {
             id: doc.id,
           });
         });
-        setThoughtsRes((prev) => ({
-          ...prev,
-          data: [...thoughts],
+        // setThoughtsRes((prev) => ({
+        //   ...prev,
+        //   data: [...thoughts],
+        //   isLoading: false,
+        // }));
+        setQuery<ThoughtType[]>(QUERY_KEYS.THOUGHTS, {
           isLoading: false,
-        }));
+          data: [...thoughts],
+        });
       }
     );
 
     return () => unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   return (

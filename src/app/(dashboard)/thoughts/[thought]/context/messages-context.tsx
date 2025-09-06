@@ -15,6 +15,8 @@ import {
 } from "@/lib/thoughts";
 import {
   messagesColRef,
+  orderBy,
+  query,
   thoughtsDocRef,
 } from "@/app/firebase/config";
 import { useSession } from "next-auth/react";
@@ -79,9 +81,14 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
     if (!userId) return;
     setIsLoadingMessages(true);
 
+    const messagesQuery = query(
+      messagesColRef(userId, thought as string),
+      orderBy("createdAt", "asc") // ascending = latest last
+    );
+
     let messages: MessageType[] = [];
     const unsubscribe = onSnapShotCollectionWrapper(
-      messagesColRef(userId, thought as string),
+      messagesQuery,
       (snapshot) => {
         messages = [];
         snapshot.docs.forEach((doc) => {
@@ -100,7 +107,6 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
         // }
       }
     );
-
 
     const unsubThoughtDoc = onSnapShotDocumentWrapper<FireStoreThoughtDataType>(
       thoughtsDocRef(userId, thought as string),

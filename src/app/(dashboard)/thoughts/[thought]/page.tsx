@@ -39,9 +39,13 @@ function NotesPage() {
         <div className="flex items-center gap-4">
           {<ArrowBack />}
           <div>
-            <p className="text-2xl text-neutral-main font-bold capitalize">
-              {currentThought?.title}
-            </p>
+            {!isLoadingMessages ? (
+              <p className="text-2xl text-neutral-main font-bold capitalize">
+                {currentThought?.title}
+              </p>
+            ) : (
+              <SkeletonLoader width="150px" height="45px" />
+            )}
             <p className="text-neutral-main text-xs sm:text-sm md:text-base mt-1"></p>
           </div>
         </div>
@@ -56,13 +60,13 @@ function NotesPage() {
             <div key={index}>
               <SkeletonLoader width="150px" height="25px" />
             </div>
-          ))}  
+          ))}
         </div>
       ) : (
         <div className="flex flex-col gap-6 pr-4  overflow-y-scroll flex-1">
           {((stateMessages && stateMessages.length < 1) || !stateMessages) && (
-            <p className="text-center"> {(new Date().toDateString())} </p>
-          )}  
+            <p className="text-center"> {new Date().toDateString()} </p>
+          )}
           {(stateMessages as MessagesGroupedByDateType[])?.map(
             ({ day, messages }, index) => {
               return (
