@@ -11,13 +11,13 @@ import { twMerge } from "tailwind-merge";
 import { ArrowBack } from "@/components";
 
 function NotesPage() {
-  const { stateMessages, isLoadingMessages, currentThought } =
+  const { stateMessages, isLoadingMessages, currentThought, isLoadingThought } =
     useMessagesContext();
-  const tableScrollRef = useRef<HTMLDivElement | null>(null);
+  const pagecrollRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToTableTop = useCallback(() => {
     setTimeout(() => {
-      tableScrollRef.current?.scrollIntoView({
+      pagecrollRef.current?.scrollIntoView({
         block: "start",
         behavior: "smooth",
       });
@@ -29,6 +29,8 @@ function NotesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  
+
   return (
     <div className="flex flex-col h-[100dvh]">
       <header
@@ -39,12 +41,12 @@ function NotesPage() {
         <div className="flex items-center gap-4">
           {<ArrowBack />}
           <div>
-            {!isLoadingMessages ? (
+            {isLoadingThought ? (
+              <SkeletonLoader width="150px" height="45px" />
+            ) : (
               <p className="text-2xl text-neutral-main font-bold capitalize">
                 {currentThought?.title}
               </p>
-            ) : (
-              <SkeletonLoader width="150px" height="45px" />
             )}
             <p className="text-neutral-main text-xs sm:text-sm md:text-base mt-1"></p>
           </div>

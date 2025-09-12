@@ -12,13 +12,9 @@ import { QUERY_KEYS } from "@/utils";
 const Page = () => {
   const { data: session } = useSession();
   const userId = session?.user.id as string;
-  const { getQuery, setQuery, } = useQueryContext();
-  const thoughtsRes = getQuery<ThoughtType[]>(QUERY_KEYS.THOUGHTS);
+  const { initQuery, setQuery, } = useQueryContext();
+  const thoughtsRes = initQuery<ThoughtType[]>([QUERY_KEYS.THOUGHTS]);
 
-  // const [thoughtsRes, setThoughtsRes] = useState<{
-  //   data: ThoughtType[] | null;
-  //   isLoading: boolean;
-  // }>({ data: null, isLoading: true });
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -46,7 +42,7 @@ const Page = () => {
         //   data: [...thoughts],
         //   isLoading: false,
         // }));
-        setQuery<ThoughtType[]>(QUERY_KEYS.THOUGHTS, {
+        setQuery<ThoughtType[]>([QUERY_KEYS.THOUGHTS], {
           isLoading: false,
           data: [...thoughts],
         });

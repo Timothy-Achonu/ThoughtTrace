@@ -1,53 +1,73 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { QUERY_KEYS } from "@/utils";
+import React, { createContext, useContext, useReducer, ReactNode } from "react";
 
 // Type of a single query state
-type QueryState<T = any> = {
+export type QueryState<T = unknown> = {
   isLoading: boolean;
   data: T | null;
 };
 
-// Type of the queries object (keys can be any string)
-type QueriesState = {
-  [key: string]: QueryState;
-};
+// Key type (array of strings/numbers, like React Query)
+export type QueryKey = (string | number)[];
 
 // Context value type
 type QueryContextValue = {
-  queries: QueriesState;
-  setQuery: <T = any>(key: string, state: QueryState<T>) => void;
-  getQuery: <T>(key: string) => QueryState<T>;
+  queries: Map<string, QueryState>;
+  setQuery: <T>(key: QueryKey, state: QueryState<T>) => void;
+  getQuery: <T>(key: QueryKey) => QueryState<T> | undefined;
+  initQuery: <T>(key: QueryKey, initial?: QueryState<T>) => QueryState<T>;
 };
 
-// Build initial state automatically from QUERY_KEYS
-const buildInitialQueriesState = (): QueriesState => {
-  return Object.keys(QUERY_KEYS).reduce((acc, key) => {
-    acc[key as keyof typeof QUERY_KEYS] = { isLoading: true, data: null };
-    return acc;
-  }, {} as QueriesState);
+// 🔑 A helper to generate a stable key string
+const makeKey = (key: QueryKey): string => key.join("::");
+
+// Reducer for queries
+type Action<T = unknown> = {
+  type: "SET_QUERY";
+  key: string;
+  state: QueryState<T>;
 };
+
+function queriesReducer(state: Map<string, QueryState>, action: Action) {
+  const newState = new Map(state);
+  switch (action.type) {
+    case "SET_QUERY":
+      newState.set(action.key, action.state);
+      return newState;
+    default:
+      return state;
+  }
+}
 
 // Create Context
 const QueryContext = createContext<QueryContextValue | undefined>(undefined);
 
 // Provider component
 export const QueryProvider = ({ children }: { children: ReactNode }) => {
-  const [queries, setQueries] = useState<QueriesState>(buildInitialQueriesState());
- const getQuery = <T,>(key:string) : QueryState<T> => {
-      return queries[key]
- }
-  const setQuery = <T,>(key: string, state: QueryState<T>) => {
-    setQueries((prev) => ({
-      ...prev,
-      [key]: state,
-    }));
+  const [queries, dispatch] = useReducer(queriesReducer, new Map());
+
+  const setQuery = <T,>(key: QueryKey, state: QueryState<T>) => {
+    dispatch({ type: "SET_QUERY", key: makeKey(key), state });
   };
 
+  const getQuery = <T,>(key: QueryKey): QueryState<T> | undefined => {
+    return queries.get(makeKey(key)) as QueryState<T> | undefined;
+  };
+
+  const initQuery = <T,>(
+    key: QueryKey,
+    initial: QueryState<T> = { isLoading: true, data: null }
+  ): QueryState<T> => {
+    const k = makeKey(key);
+    const existing = queries.get(k) as QueryState<T> | undefined;
+    if (existing) return existing;
+    dispatch({ type: "SET_QUERY", key: k, state: initial });
+    return initial;
+  };
 
   return (
-    <QueryContext.Provider value={{ queries, setQuery, getQuery }}>
+    <QueryContext.Provider value={{ queries, setQuery, getQuery, initQuery }}>
       {children}
     </QueryContext.Provider>
   );

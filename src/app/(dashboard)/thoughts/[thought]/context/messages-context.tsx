@@ -3,7 +3,6 @@
 import React, {
   createContext,
   useContext,
-  useState,
   useEffect,
   ReactNode,
 } from "react";
@@ -20,21 +19,19 @@ import {
   thoughtsDocRef,
 } from "@/app/firebase/config";
 import { useSession } from "next-auth/react";
-import { getFormattedDate } from "@/utils";
+import { getFormattedDate, QUERY_KEYS } from "@/utils";
 import { Timestamp } from "@/app/firebase/config";
 import { useParams } from "next/navigation";
 import {
   onSnapShotCollectionWrapper,
   onSnapShotDocumentWrapper,
 } from "@/lib/common";
+import { useQueryContext } from "@/context";
 
 interface MessagesContextProps {
   stateMessages: MessagesGroupedByDateType[] | null;
-  setMessages: React.Dispatch<
-    React.SetStateAction<MessagesGroupedByDateType[] | null>
-  >;
   isLoadingMessages: boolean;
-  setIsLoadingMessages: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoadingThought: boolean;
   currentThought: ThoughtType | null;
 }
 
@@ -66,23 +63,28 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
 }) => {
   const { data: session } = useSession();
   const params = useParams();
-  const { thought } = params;
+  const { thought: thoughtId } = params;
+  const { initQuery, setQuery } = useQueryContext();
+    const messagesQueryKeys =  [
+    QUERY_KEYS.MESSAGES,
+    thoughtId as string,
+  ]
 
-  const [stateMessages, setMessages] = useState<
-    MessagesGroupedByDateType[] | null
-  >(null);
-  const [currentThought, setCurrentThought] = useState<ThoughtType | null>(
-    null
-  );
-  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
+  const messagesRes = initQuery<MessagesGroupedByDateType[]>(messagesQueryKeys);
+  const { isLoading: isLoadingMessages } = messagesRes;
+
+
+  const thoughtQueryKeys = [QUERY_KEYS.THOUGHT, thoughtId as string]
+  const { isLoading: isLoadingThought, data: currentThought } =
+    initQuery<ThoughtType>(thoughtQueryKeys);
   const userId = session?.user.id;
+
 
   useEffect(() => {
     if (!userId) return;
-    setIsLoadingMessages(true);
 
     const messagesQuery = query(
-      messagesColRef(userId, thought as string),
+      messagesColRef(userId, thoughtId as string),
       orderBy("createdAt", "asc") // ascending = latest last
     );
 
@@ -90,7 +92,7 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
     const unsubscribe = onSnapShotCollectionWrapper(
       messagesQuery,
       (snapshot) => {
-        messages = [];
+        messages = [];  
         snapshot.docs.forEach((doc) => {
           messages.push({
             body: doc.data().body,
@@ -99,22 +101,31 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
             createdAt: doc.data().createdAt,
           });
         });
-        setIsLoadingMessages(false);
         const groups = groupMessagesByDate(messages);
         // const lastGroup = groups[groups.length - 1];
         // if (lastGroup?.messages[lastGroup.messages.length - 1].createdAt) {
-        setMessages(groups);
+        // setMessages(groups);
+        setQuery<MessagesGroupedByDateType[]>(
+          messagesQueryKeys,
+          { isLoading: false, data: groups }
+        );
         // }
       }
     );
 
+    ///Getting current doc  
     const unsubThoughtDoc = onSnapShotDocumentWrapper<FireStoreThoughtDataType>(
-      thoughtsDocRef(userId, thought as string),
+      thoughtsDocRef(userId, thoughtId as string),
       (snapshot) => {
         const data = snapshot.data();
         if (!data || !data.title) return;
         const thought = { ...data, id: snapshot.id };
-        setCurrentThought(thought);
+        console.log({thought})
+        // setCurrentThought(thought);
+        setQuery<ThoughtType>(thoughtQueryKeys, {
+          isLoading: false,
+          data: thought,
+        });
       }
     );
     return () => {
@@ -128,11 +139,10 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
   return (
     <MessagesContext.Provider
       value={{
-        stateMessages,
-        setMessages,
+        stateMessages: messagesRes.data,
         isLoadingMessages,
-        setIsLoadingMessages,
         currentThought,
+        isLoadingThought,
       }}
     >
       {children}
