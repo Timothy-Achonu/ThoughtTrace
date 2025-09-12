@@ -26,13 +26,20 @@ import {
   onSnapShotCollectionWrapper,
   onSnapShotDocumentWrapper,
 } from "@/lib/common";
-import { useQueryContext } from "@/context";
+import { useQueryContext, QueryKey } from "@/context";
+import dayjs from "dayjs";
 
 interface MessagesContextProps {
   stateMessages: MessagesGroupedByDateType[] | null;
   isLoadingMessages: boolean;
   isLoadingThought: boolean;
   currentThought: ThoughtType | null;
+  messagesQueryKeys: QueryKey;
+  thoughtQueryKeys: QueryKey;
+  setMessages: (data: MessagesGroupedByDateType[]) => void;
+  insetNewMessage: (newMessage: MessageType) => MessagesGroupedByDateType[] | null
+
+
 }
 
 const MessagesContext = createContext<MessagesContextProps | undefined>(
@@ -134,6 +141,40 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+
+  const setMessages = (data: MessagesGroupedByDateType[]) => {
+     setQuery<MessagesGroupedByDateType[]>(
+          messagesQueryKeys,
+          { ...messagesRes, data: data }
+        );
+  }
+
+  const insetNewMessage = (
+    newMessage: MessageType
+  ) => {
+    const today = dayjs().format("DD MMMM YYYY");
+    const messagesGroupByDate = messagesRes.data
+    const existingGroup = messagesGroupByDate?.find(
+      (group) => group.day === today
+    );
+    if (existingGroup) {
+      return (
+        messagesGroupByDate?.map((group) =>
+          group.day === today
+            ? {
+                ...group,
+                messages: [...group.messages, newMessage],
+              }
+            : group
+        ) || null
+      );
+    } else {
+      return messagesGroupByDate
+        ? [...messagesGroupByDate, { day: today, messages: [newMessage] }]
+        : messagesGroupByDate;
+    }
+  };
+  
   return (
     <MessagesContext.Provider
       value={{
@@ -141,6 +182,10 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
         isLoadingMessages,
         currentThought,
         isLoadingThought,
+        messagesQueryKeys,
+        thoughtQueryKeys,
+        setMessages,
+        insetNewMessage,
       }}
     >
       {children}
