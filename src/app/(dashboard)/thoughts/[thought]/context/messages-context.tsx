@@ -120,8 +120,6 @@ export const MessagesProvider: React.FC<MessagesProviderProps> = ({
         const data = snapshot.data();
         if (!data || !data.title) return;
         const thought = { ...data, id: snapshot.id };
-        console.log({thought})
-        // setCurrentThought(thought);
         setQuery<ThoughtType>(thoughtQueryKeys, {
           isLoading: false,
           data: thought,
