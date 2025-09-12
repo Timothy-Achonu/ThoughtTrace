@@ -13,8 +13,9 @@ import {
 } from "@/app/firebase/config";
 import { signOut as nextAuthSignOut } from "next-auth/react";
 import { signoutFirebase } from "@/lib";
+import { Query } from "firebase/firestore";
 
-type SnapshotSource<T> = CollectionReference<T>;
+type SnapshotSource<T> = CollectionReference<T> | Query<T, DocumentData>;
 
 export const onSnapShotCollectionWrapper = <T>(
   source: SnapshotSource<T>,
@@ -40,8 +41,7 @@ export const addDocWrapper = async <T extends DocumentData>(
   try {
     return await addDoc(collectionRef, data);
   } catch (error: any) {
-       handleError(error);
-
+    handleError(error);
   }
 };
 

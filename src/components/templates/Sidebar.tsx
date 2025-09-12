@@ -14,6 +14,7 @@ import { thoughtsColRef } from "@/app/firebase/config";
 import { onSnapShotCollectionWrapper } from "@/lib/common";
 import { cn } from "@/utils";
 import { SkeletonLoader } from "../ui";
+import TrashIcon from "@/assets/icons/trash-icon.svg";
 
 function Sidebar() {
   const { showSidebar, toggleSidebar } = useToggleSidebar();
@@ -79,20 +80,31 @@ function Sidebar() {
           thoughsQuery.data?.map((thought, index) => {
             const isActive = thought.id === thoughtId;
             return (
-              <button
+              <div
                 key={index}
-                type="button"
-                onClick={() => toggleSidebar()}
-                className={cn(isActive && "bg-accent-blue", "py-1 px-4 flex")}
+                className={cn(
+                  isActive && "bg-accent-blue",
+                  " px-4 flex justify-between"
+                )}
               >
                 <Link
                   href={`/thoughts/${thought.id}`}
-                  className="w-full text-start"
+                  className={cn(
+                    isActive && "bg-accent-blue",
+                    "py-3 flex flex-1"
+                  )}
+                  onClick={() => toggleSidebar()}
                 >
                   {" "}
                   {thought.title}{" "}
                 </Link>
-              </button>
+                <button>
+                  {" "}
+                  <TrashIcon
+                    className={cn(!isActive && "[&>path]:stroke-red-600")}
+                  />{" "}
+                </button>
+              </div>
             );
           })}
         {!thoughsQuery.isLoading && !thoughsQuery.data && (

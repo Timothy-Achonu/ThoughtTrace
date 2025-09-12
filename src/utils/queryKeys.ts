@@ -1,0 +1,7 @@
+
+export const QUERY_KEYS = {
+  THOUGHTS : "THOUGHTS",
+  MESSAGES: "THOUGHT_MESSAGES",
+  THOUGHT: 'GET_ONE_THOUGHT'
+  
+} as const

@@ -29,9 +29,12 @@ export type CreateThoughtType = BaseThoughtType & {
   createdAt?: FieldValue;
 };
 
+//The reason for this separate firestore typing is because firestore doesn't return the id of a document in the same place it returns the rest of the of other properties: doc.data() doesn't contain id.
 export type FireStoreThoughtDataType = CreateThoughtType & {
   messages?: MessageType[];
   createdAt?: Timestamp;
+  lastMessage?: MessageType;
+  numberOfMessages?: number;
 };
 export type ThoughtType = FireStoreThoughtDataType & {
   id: string;

@@ -1,38 +1,11 @@
 import { useState, useRef } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { createMessage, MessagesGroupedByDateType, MessageType } from "@/lib";
+import { createMessage, } from "@/lib";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import dayjs from "dayjs";
 import { useMessagesContext } from "../context";
 import { formatSecondsToMMSS } from "@/utils";
 import { useParams } from "next/navigation";
-
-const arrangeNotes = (
-  messagesGroupByDate: MessagesGroupedByDateType[] | null,
-  newMessage: MessageType
-) => {
-  const today = dayjs().format("DD MMMM YYYY");
-  const existingGroup = messagesGroupByDate?.find(
-    (group) => group.day === today
-  );
-  if (existingGroup) {
-    return (
-      messagesGroupByDate?.map((group) =>
-        group.day === today
-          ? {
-              ...group,
-              messages: [...group.messages, newMessage],
-            }
-          : group
-      ) || null
-    );
-  } else {
-    return messagesGroupByDate
-      ? [...messagesGroupByDate, { day: today, messages: [newMessage] }]
-      : messagesGroupByDate;
-  }
-};
 
 const useAudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -45,7 +18,8 @@ const useAudioRecorder = () => {
   const shouldSaveRef = useRef<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { data: session } = useSession();
-  const { setMessages } = useMessagesContext();
+  const { insetNewMessage } = useMessagesContext();
+
   const params = useParams();
   const { thought: thoughtId } = params;
   const startRecording = async () => {
@@ -85,12 +59,12 @@ const useAudioRecorder = () => {
         const url = URL.createObjectURL(audioBlob);
         const userId = (session as Session).user.id as string;
         const newMessage = {
-          id: '', //leave as empty string so that id value is falsy
+          id: "", //leave as empty string so that id value is falsy
           downloadURL: url,
           user_id: userId,
         };
         setAudioURL(url);
-        setMessages((prev) => arrangeNotes(prev, newMessage));
+        insetNewMessage(newMessage);
 
         const uploadAudioAndCreateNote = async () => {
           try {

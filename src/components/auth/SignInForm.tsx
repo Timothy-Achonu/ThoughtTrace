@@ -9,6 +9,7 @@ import { signInValidationSchema } from "../../lib/auth/schemas";
 import { Input } from "../atoms/Input";
 import { SubmitButton } from "../atoms/SubmitButton";
 import { GoogleIcon } from "@/assets";
+import Link from "next/link";
 
 function SignInForm() {
   const searchParams = useSearchParams();
@@ -58,27 +59,27 @@ function SignInForm() {
       // toast.error(getError(error) || "Login failed! Please try again.");
     }
   }
-  //read below:
-  // Arrange Signin with Google properly. Add a proper button with Google Icon.
-  // Remember Google Sigin and Signup is rolled into one. Check Gemini chat.
-  // Test your account created with Google and then move to the next
+
   return (
     <section className=" w-[90%] mx-auto">
       <div className="">
-        <Heading className="text-2xl text-center font-semibold">
-          Sign In
-        </Heading>
+        <Heading className="text-center font-semibold">Welcome back</Heading>
         <form action={onSubmit} className="text-black w-full mt-6">
           <Button
             type="button"
             intent={"outline"}
             onClick={() => {
-              signIn("google")}}
+              signIn("google");
+            }}
             className="mx-auto"
           >
-            <GoogleIcon /> <span> Sign In with Google </span>
+            <GoogleIcon /> <span> Continue with Google </span>
           </Button>
-          <p className="py-6 mx-auto w-fit">OR</p>
+          <div className="flex items-center gap-2 my-6">
+            <hr className="h-[1px] w-full bg-gray-500/30 " />
+            <p className="">OR</p>
+            <hr className="h-[1px] w-full bg-gray-500 " />
+          </div>
 
           <div className="mb-4 flex flex-col">
             <Input
@@ -91,10 +92,11 @@ function SignInForm() {
               error={touched.email && errors.email ? errors.email : ""}
               value={values.email}
               placeholder="user@example.com"
+              className="dark:bg-white"
             />
 
             <Input
-              name="password"
+              name="password"  
               id="password"
               type="password"
               label="Password"
@@ -103,17 +105,24 @@ function SignInForm() {
               error={touched.password && errors.password ? errors.password : ""}
               value={values.password}
               placeholder="**********"
+              className="dark:bg-white"
             />
           </div>
-          <SubmitButton className="w-full">Sign in</SubmitButton>
-          <Button
+          <SubmitButton className="w-full dark:text-white">
+            Sign in
+          </SubmitButton>
+          {/* <Button
             isLink={true}
             href="/signup"
-            intent="outline"
+            intent="outline"  
             className="mt-4 bg-transparent border-none mx-auto hover:text-accent-blue"
           >
             Sign up
-          </Button>
+          </Button> */}
+          <div className="text-purple-light text-center mt-4">
+            <span>Don&apos;t Have an account yet?</span>
+            <Link href="/signup"> Sign up</Link>
+          </div>
         </form>
       </div>
     </section>

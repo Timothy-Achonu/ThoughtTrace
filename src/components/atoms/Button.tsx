@@ -1,16 +1,16 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
 import Link from "next/link";
+import { cn } from "@/utils"; 
 
 const button = cva(
   [
-    "flex",
+    "flex",  
     "items-center",
     "justify-center",
     "leading-none",
     "duration-[500ms]",
-    "w-fit",
+    "w-full",
     "gap-4",
     "place-items-center",
     "transition-all",
@@ -18,29 +18,31 @@ const button = cva(
     "rounded-[4px]",
     "raleway-font",
     "whitespace-nowrap",
+    "disabled:opacity-30",
+    "disabled:cursor-not-allowed"
   ],
   {
-    variants: {
+    variants: { 
       intent: {
         primary: [
-          "bg-accent-blue",
-          "text-neutral-main",
+          "bg-purple-light",
+          "text-white",
           "border-transparent",
-          "disabled:opacity-25",
+          'hover:bg-purple-700',
+          'dark:hover:bg-purple-700',
+          'dark:text-black'
         ],
         outline: [
           "bg-transparent",
           "text-accent-blue",
           "border",
           "border-accent-blue",
-          "disabled:opacity-25",
         ],
         ghost: [
           "bg-transparent",
           "text-neutral-main",
           "hover:border-b",
           "border-accent-blue",
-          "disabled:opacity-25",
         ],
       },
       size: {
@@ -93,13 +95,13 @@ export const Button: React.FC<ButtonProps> = ({
   return isLink ? (
     <Link
       href={href ? href : "/about"}
-      className={twMerge(button({ intent, size, btnType, className }))}
+      className={cn(button({ intent, size, btnType, className }))}
     >
       {children}
     </Link>
   ) : (
     <button
-      className={twMerge(button({ intent, size, btnType, className }))}
+      className={cn(button({ intent, size, btnType, className }))}
       {...props}
     >
       {" "}

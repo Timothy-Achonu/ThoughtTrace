@@ -3,6 +3,8 @@ import { Open_Sans, Raleway } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "./providers";
+import { QueryProvider } from "@/context";
 
 const OpenSan = Open_Sans({ weight: "400", subsets: ["latin"] });
 export const raleway = Raleway({
@@ -24,12 +26,15 @@ export default function RootLayout({
   return (
     <html className={``} lang="en">
       <body
-        className={`${OpenSan.className} ${raleway.variable} bg-secondary text-neutral-main h-[100dvh] overflow-hidden`}
+        className={`${OpenSan.className} ${raleway.variable} text-neutral-main h-[100dvh] overflow-hidden`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <QueryProvider>{children}</QueryProvider>
+          </ThemeProvider>
+        </AuthProvider>
         <Toaster />
-      </body>  
+      </body>
     </html>
   );
-}  
-  
+}

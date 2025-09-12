@@ -25,7 +25,7 @@ function isTimestamp(value: any): value is Timestamp {
     value &&
     typeof value === "object" &&
     typeof value.seconds === "number" &&
-    typeof value.nanoseconds === "number"
+    typeof value.nanoseconds === "number" 
   );
 }
 
