@@ -1,11 +1,10 @@
 "use client";
-import { Moon, Sun, Settings, LogOut, BookOpen } from "lucide-react";
+import { Settings, LogOut, BookOpen } from "lucide-react";
 // import { Button } from "../atoms";
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import { signoutFirebase } from "@/lib/auth/actions";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "../molecules";
 
 export const ThoughtsNavbar = () => {
   const pathname = usePathname();
@@ -44,28 +43,3 @@ export const ThoughtsNavbar = () => {
   );
 };
 
-function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
-  return (
-    <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="w-4 h-4"
-    >
-      {theme === "dark" ? (
-        <Sun className="h-4 w-4" />
-      ) : (
-        <Moon className="h-4 w-4" />
-      )}
-    </button>
-  );
-}

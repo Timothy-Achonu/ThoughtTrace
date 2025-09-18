@@ -88,7 +88,6 @@ const getServerTime = httpsCallable<{}, { now: Timestamp }>(
   "getServerTime"
 );
 
-const batch = writeBatch(db);
 
 export {
   app,
@@ -125,7 +124,6 @@ export {
   DocumentSnapshot,
   deleteDoc,
   writeBatch,
-  batch,
   increment,
 };
 export type { Unsubscribe, DocumentData };

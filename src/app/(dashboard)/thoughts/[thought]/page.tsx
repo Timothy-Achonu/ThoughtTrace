@@ -1,7 +1,7 @@
 "use client";
 import { MessagesGroupedByDateType } from "@/lib/thoughts";
 import MessageCreator from "./components/MesssageCreator";
-import { SkeletonLoader } from "@/components/ui";
+import { Badge, SkeletonLoader } from "@/components/ui";
 import { getFormattedDate } from "@/utils";
 import { ClockIcon } from "@/assets";
 import { useCallback, useEffect, useRef } from "react";
@@ -9,6 +9,7 @@ import { AudioWaveform } from "./components";
 import { useMessagesContext } from "./context";
 import { twMerge } from "tailwind-merge";
 import { ArrowBack } from "@/components";
+import { ThemeToggle } from "@/components/molecules";
 
 function NotesPage() {
   const { stateMessages, isLoadingMessages, currentThought, isLoadingThought } =
@@ -29,13 +30,11 @@ function NotesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
-
   return (
     <div className="flex flex-col h-[100dvh]">
       <header
         className={twMerge(
-          `sticky grid items-center rounded-xl shadow-sm px-4 md:px-8  py-4 top-0 left-0 right-0 z-10 w-full`
+          `flex justify-between items-center rounded-xl shadow-sm px-4 md:px-8  py-4 left-0 right-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50`
         )}
       >
         <div className="flex items-center gap-4">
@@ -51,10 +50,13 @@ function NotesPage() {
             <p className="text-neutral-main text-xs sm:text-sm md:text-base mt-1"></p>
           </div>
         </div>
+        <ThemeToggle />
       </header>
       {/* <div className="flex-1"> */}
-      <div className="max-w-[MIN(340px,70vw)] mx-auto text-clip font-semibold font-sans text-center text-xs mb-9">
-        <p>This is the beginning of a conversation with yourself....</p>
+      <div className="max-w-[MIN(340px,70vw)] mx-auto text-clip font-semibold font-sans text-center text-xs mb-9 mt-4">
+        <p className="">
+          This is the beginning of a conversation with yourself....
+        </p>
       </div>
       {isLoadingMessages ? (
         <div className="flex flex-col items-end gap-6 pr-4 overflow-y-scroll flex-1">
@@ -74,10 +76,20 @@ function NotesPage() {
               return (
                 <ul className="" key={index}>
                   {" "}
-                  <p className="bg-accent-blue py-1 px-2 rounded-md max-w-[MIN(340px,70vw)] w-fit mx-auto text-center sticky top-0 z-10 text-[0.75rem]">
-                    {" "}
-                    {day}{" "}
-                  </p>
+                  <div className="flex items-center max-w-[MIN(340px,70vw)] mx-auto  sticky top-0 z-10 ">
+                    <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+
+                    <p className="bg-accent-blue py-1 px-2 rounded-md  w-fit  text-center text-[0.75rem]">
+                      {" "}
+                    </p>
+                    <Badge
+                      variant="secondary"
+                      className="mx-4 px-3 py-1 text-xs"
+                    >
+                      {day}{" "}
+                    </Badge>
+                    <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+                  </div>
                   <li className="flex flex-col gap-6 items-end mt-6">
                     {messages.map((messages, index) => {
                       return (

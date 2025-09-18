@@ -3,10 +3,11 @@ import {
   serverTimestamp,
   thoughtsColRef,
   messagesColRef,
-  batch,
   doc,
   increment,
   thoughtsDocRef,
+  writeBatch,
+  db,
 } from "@/app/firebase/config";
 import { addDocWrapper } from "../common";
 
@@ -28,6 +29,7 @@ export async function createMessage(
   thoughtId: string,
   message: CreateMessageType
 ) {
+const batch = writeBatch(db);
 
   const messageDocRef = doc(messagesColRef(userId, thoughtId));
   const thoughtDocRef = thoughtsDocRef(userId, thoughtId);
